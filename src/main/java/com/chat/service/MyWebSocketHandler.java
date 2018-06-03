@@ -18,7 +18,17 @@ import java.util.Set;
  * @date 2018/6/3 15:32
  **/
 public class MyWebSocketHandler implements WebSocketHandler {
-
+//    a.在afterConnectionEstablished连接建立成功之后，记录用户的连接标识，便于后面发信息，这里我是记录将id记录在Map集合中。
+//
+//    b.在handleTextMessage中可以对H5 Websocket的send方法进行处理
+//
+//    c.sendMessageToUser向指定用户发送消息，传入用户标识和消息体
+//
+//    d.sendMessageToAllUsers向左右用户广播消息，只需要传入消息体
+//
+//    e.handleTransportError连接出错处理，主要是关闭出错会话的连接，和删除在Map集合中的记录
+//
+//    f.afterConnectionClosed连接已关闭，移除在Map集合中的记录。
     // 日志
     private static final Logger logger = Logger.getLogger(MyWebSocketHandler.class);
 
@@ -58,7 +68,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
         return null;
     }
 
-    // 处理信息
+    // 处理信息，可以对H5 Websocket的send方法进行处理
     @Override
     public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> message) throws Exception {
         Gson gson = new Gson();
