@@ -17,11 +17,13 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
     // 握手前
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        System.out.println("++++++++++++++++ HandshakeInterceptor: beforeHandshake  ++++++++++++++" + attributes);
-        HttpSession session = ((ServletServerHttpRequest) request).getServletRequest().getSession();
-        if (session != null) {
-            attributes.put("user_id", session.getAttribute("user_id"));
-            System.out.println("HandshakeInterceptor" + session.getAttribute("user_id"));
+        if (request instanceof ServletServerHttpRequest) {
+            System.out.println("++++++++++++++++ HandshakeInterceptor: beforeHandshake  ++++++++++++++" + attributes);
+            HttpSession session = ((ServletServerHttpRequest) request).getServletRequest().getSession();
+            if (session != null) {
+                attributes.put("user_id", session.getAttribute("user_id"));
+                System.out.println("HandshakeInterceptor" + session.getAttribute("user_id"));
+            }
         }
         return true;
     }
