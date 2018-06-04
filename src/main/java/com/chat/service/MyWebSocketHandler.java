@@ -17,6 +17,7 @@ import java.util.Set;
  * @author xiaolei hu
  * @date 2018/6/3 15:32
  **/
+@Component
 public class MyWebSocketHandler implements WebSocketHandler {
 //    a.在afterConnectionEstablished连接建立成功之后，记录用户的连接标识，便于后面发信息，这里我是记录将id记录在Map集合中。
 //
