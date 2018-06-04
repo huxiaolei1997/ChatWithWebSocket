@@ -14,7 +14,7 @@ import java.util.Map;
  * @author xiaolei hu
  * @date 2018/6/3 15:48
  **/
-public class WebSocketInterceptor extends HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
+public class WebSocketInterceptor extends HttpSessionHandshakeInterceptor {
     // 握手前
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
@@ -28,7 +28,7 @@ public class WebSocketInterceptor extends HttpSessionHandshakeInterceptor implem
                 System.out.println("WebSocketInterceptor" + session.getAttribute("user_id"));
             }
         }
-        return super.beforeHandshake(request, response, wsHandler, attributes);
+        return true;
     }
 
 

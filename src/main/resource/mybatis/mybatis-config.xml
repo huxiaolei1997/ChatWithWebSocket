@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+	PUBLIC 	"-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+	<configuration>
+		<!-- 这个配置使全局的映射器启用或禁用缓存  -->
+		<settings>
+			<setting name="cacheEnabled" value="true"/>
+			<setting name="logImpl" value="STDOUT_LOGGING"/>
+		</settings>
+		
+		<!-- 别名配置  -->
+		<typeAliases>
+            <!--<typeAlias alias="news" type="com.ysxy.pojo.News"/>-->
+            <!--<typeAlias alias="user" type="com.ysxy.pojo.User"/>-->
+            <!--<typeAlias alias="studentWorksComment" type="com.ysxy.pojo.StudentWorksComment"/>-->
+            <!--<typeAlias alias="teacherWorks" type="com.ysxy.pojo.TeacherWorks"/>-->
+            <!--<typeAlias alias="artistWorks" type="com.ysxy.pojo.ArtistWorks"/>-->
+            <!--<typeAlias alias="teachingCopyWorks" type="com.ysxy.pojo.TeachingCopyWorks"/>-->
+            <!--<typeAlias alias="teachingCopyWorksFrontPoJo" type="com.ysxy.pojo.TeachingCopyWorksFrontPoJo"/>-->
+		</typeAliases>
+		<!--<environments default="development">
+			<environment id="development">
+				<transactionManager type="JDBC">
+					<property name="autoCommit" value="false" />
+				</transactionManager>
+				<dataSource type="POOLED">
+					<property name="driver" value="com.mysql.jdbc.Driver" />
+					<property name="url" value="jdbc:mysql://localhost:3366/ysxy?useUnicode=true&amp;characterEncoding=UTF-8" />
+					<property name="username" value="root" />
+				    <property name="password" value="hxl2580" />
+				</dataSource>
+			</environment>
+		</environments>
+		-->
+		<mappers>
+			<!--<mapper resource="com/ysxy/mapper/UserMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/StudentWorksCommentMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/ArtistWorksMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/StudentWorksMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/TeacherMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/TeacherWorksMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/NewsMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/ArtistMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/ArtistWorksMapper.xml"/>-->
+			<!--<mapper resource="com/ysxy/mapper/TeachingCopyWorksMapper.xml"/>-->
+		</mappers>
+	</configuration>

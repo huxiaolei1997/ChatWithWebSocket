@@ -10,14 +10,37 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context-4.3.xsd
             http://www.springframework.org/schema/mvc
-            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
             http://www.springframework.org/schema/websocket
             http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
 
     <!-- 扫描controller -->
     <context:component-scan base-package="com.chat.controller"/>
     <!-- 设置默认配置方案  -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven>
+        <!-- 设置不使用默认的消息转换器 -->
+        <mvc:message-converters register-defaults="false">
+            <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+            <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 设置静态资源请求转由web服务器对应的servlet处理，不经过前端控制器DispatcherServlet处理-->
+    <mvc:default-servlet-handler />
+
+    <!-- 配置视图解析器 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
     <!-- websocket处理类 -->
     <bean id="myHandler" class="com.chat.service.MyWebSocketHandler"/>
 

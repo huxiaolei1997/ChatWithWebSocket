@@ -47,6 +47,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.info("MyWebSocketHandler, connect websocket success.......");
         Integer user_id = getClientId(session);
+        logger.info("获取的用户user_id:" + user_id);
         //System.out.println(user_id);
         if (user_id != null) {
             users.put(user_id, session);
