@@ -36,6 +36,6 @@ public class WebSocketInterceptor extends HttpSessionHandshakeInterceptor {
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception ex) {
         System.out.println("++++++++++++++++ WebSocketInterceptor: afterHandshake  ++++++++++++++");
-        super.afterHandshake(request, response, wsHandler, ex);
+        //super.afterHandshake(request, response, wsHandler, ex);
     }
 }
