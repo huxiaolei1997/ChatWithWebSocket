@@ -186,7 +186,7 @@
             </div>
             <div class="input-text">
                 <textarea id="content" style="width: 446px; height: 150px;" class="form-control"></textarea>
-                <button type="button" id="sendMessage" style="float: right;margin-top: 3px;" class="btn btn-primary">发送</button>
+                <button type="button" id="sendMessage" style="float: right;margin-top: 3px;" class="btn btn-primary" data-to-user-id="">发送</button>
             </div>
             <%--<!-- 最外边框 -->--%>
             <%--<div style="margin: 20px auto; border: 1px solid blue; width: 300px; height: 500px;">--%>
@@ -207,6 +207,10 @@
 <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(function() {
+        // 设置默认发送信息给第一个好友
+        var to_user_id_default = $(".message").eq(0).attr("data-user-list-id");
+        console.log("默认发送消息给第一个好友：" + to_user_id_default);
+        $("#sendMessage").attr("data-to-user-id", to_user_id_default);
         // var user_id = Math.round(Math.random() * 100);
         // console.log(user_id);
         // $.ajax({
@@ -238,7 +242,13 @@
 
             // 处理消息时
             websocket.onmessage = function(evnt) {
-                $("#msg").append("<p>(<font color='red'>" + evnt.data + "</font>)</p>");
+                console.log("evet: " + evnt);
+                console.log("收到了一条消息，消息内容是：" + evnt.data);
+                //$("#msg").append("<p>(<font color='red'>" + evnt.data + "</font>)</p>");
+                $(".chat").append("<div class=\"sender\">" + "<div>"
+                    + "<img src=\"static/images/avatar.jpg\">"
+                    + "</div>" + "<div>" + "<div class=\"left_triangle\"></div>"
+                    + "<span>" + evnt.data + "</span>" + "</div>" + "</div>");
                 console.log("  websocket.onmessage   ");
             };
 
@@ -250,36 +260,47 @@
             };
 
             // 点击了发送消息按钮的响应事件
-            $("#TXBTN").click(function(){
+            $("#sendMessage").click(function(){
                 // 获取消息内容
-                var text = $("#tx").val();
+                var message_content = $("#content").val();
                 // 判断
-                if(text == null || text == ""){
-                    alert(" content  can not empty!!");
+                if(message_content == null || message_content == ""){
+                    alert("message_content can not empty!!");
                     return false;
                 }
-                // 获取要发送信息的用户的id
-                var dest_user_id = $("#dest_user_id").val();
+                // 获取收信人的id
+                var to_user_id = $(this).attr("data-to-user-id");
+                console.log("收信人id:" + to_user_id);
+                // 获取发信人的id
+                var from_user_id = $(".chat").attr("data-user-id");
+                console.log("发信人id:" + from_user_id);
+                // 发送时间
+                var send_time = new Date();
                 $.ajax({
-                    url: "message/" + dest_user_id + "/" + text,
-                    type: "GET",
+                    url: "message",
+                    type: "POST",
+                    data: JSON.stringify({
+                        from_user_id : from_user_id,
+                        to_user_id : to_user_id,
+                        content: message_content,
+                        send_time: send_time
+                    }),
                     dataType: "json",
+                    contentType: "application/json",
                     success: function (response) {
-
+                        $(".chat").append("<div class=\"receiver\">"
+                            + "<div>" + "<img src=\"static/images/avatar.jpg\">"
+                            + "</div>" + "<div>" + "<div class=\"right_triangle\"></div>"
+                            + "<span>" + response.data.content + "</span>" + "</div>" + "</div>");
                     },
                     error: function() {
 
                     }
                 });
-                // var msg = {
-                //     msgContent: text,
-                //     postsId: 1
-                // };
-                // 发送消息
-                //websocket.send(JSON.stringify(msg));
             });
         }, 1000);
 
+        // 退出登录
         $("#loginOut").click(function() {
             //websocket.close
             if (!websocket.closed) {
@@ -288,12 +309,15 @@
             location.href = "Login";
         });
 
+        // 获取和某个好友的聊天记录
         $(".message").click(function() {
             // 获取当前和自己聊天的用户id
             var to_user_id = $(this).attr("data-user-list-id");
             // 获取当前登录的用户的用户id
             var login_user_id = $(".chat").attr("data-user-id");
             console.log("to_user_id = " + to_user_id);
+            // 设置将要聊天的用户的user_id
+            $("#sendMessage").attr("data-to-user-id", to_user_id);
             // 获取和当前用户的聊天记录
             $.ajax({
                 url : "getMessageRecord",

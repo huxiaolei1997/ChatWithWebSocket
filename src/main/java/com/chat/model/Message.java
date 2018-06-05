@@ -13,10 +13,10 @@ public class Message implements Serializable {
     private long id;
 
     // 发信者id
-    private long from_user_id;
+    private int from_user_id;
 
     // 收信者id
-    private long to_user_id;
+    private int to_user_id;
 
     // 消息主体内容
     private String content;
@@ -32,19 +32,19 @@ public class Message implements Serializable {
         this.id = id;
     }
 
-    public long getFrom_user_id() {
+    public int getFrom_user_id() {
         return from_user_id;
     }
 
-    public void setFrom_user_id(long from_user_id) {
+    public void setFrom_user_id(int from_user_id) {
         this.from_user_id = from_user_id;
     }
 
-    public long getTo_user_id() {
+    public int getTo_user_id() {
         return to_user_id;
     }
 
-    public void setTo_user_id(long to_user_id) {
+    public void setTo_user_id(int to_user_id) {
         this.to_user_id = to_user_id;
     }
 

@@ -1,12 +1,15 @@
 package com.chat.controller;
 
+import com.chat.model.Message;
+import com.chat.model.Result;
+import com.chat.service.MessageService;
 import com.chat.service.MyWebSocketHandler;
+import com.chat.tools.ResultUtil;
+import com.sun.tracing.dtrace.Attributes;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.TextMessage;
 
 import java.io.IOException;
@@ -23,23 +26,26 @@ public class MessageController {
     @Autowired
     private MyWebSocketHandler myWebSocketHandler;
 
+    @Autowired
+    private MessageService messageService;
+
     // 日志
     private static final Logger logger = Logger.getLogger(MessageController.class);
 
-    @RequestMapping("/message/{user_id}/{message}")
-    public @ResponseBody
-    String sendMessage(@PathVariable("user_id") Integer user_id, @PathVariable("message") String message) {
-        String if_send_success;
+    // 给好友发送消息
+    @RequestMapping(value = "/message", method = RequestMethod.POST)
+    public @ResponseBody Result<Message> sendMessage(@RequestBody Message message) {
         try {
-            if_send_success = "success";
-            myWebSocketHandler.sendMessageToUser(user_id, new TextMessage(message));
-            return if_send_success;
+            // 发送消息给指定的好友
+            myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.getContent()));
+            // 保存消息内容到数据库中
+            logger.info("保存消息内容到数据库中，消息内容是" + message.toString());
+            messageService.saveChatRecord(message);
+            return ResultUtil.success(message);
         } catch (IOException e) {
-            if_send_success = "error";
-            System.out.println("LoginController, sendMessage() " + e.getMessage());
             logger.info("LoginController, sendMessage() " + e.getMessage());
             e.printStackTrace();
+            return ResultUtil.error(1, e.getMessage());
         }
-        return if_send_success;
     }
 }
