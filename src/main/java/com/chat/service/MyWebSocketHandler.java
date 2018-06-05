@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +112,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 //            //user.
 //        }
         Set<Integer> client_ids = users.keySet();
-        WebSocketSession session = null;
+        WebSocketSession session;
         for (Integer client_id : client_ids) {
             session = users.get(client_id);
             if (session.isOpen()) {
@@ -137,7 +138,9 @@ public class MyWebSocketHandler implements WebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         logger.info("MyWebSocketHandler, connect websocket closed.......");
         System.out.println("MyWebSocketHandler, connect websocket closed.......");
-        users.remove(session);
+        //int clientId = (Integer) session.getAttributes().get(CLIENT_ID);
+        users.remove(getClientId(session));
+        logger.info("当前在线用户数：" + users.size());
     }
 
     @Override

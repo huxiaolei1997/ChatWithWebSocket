@@ -57,6 +57,13 @@ public class UserController {
         }
     }
 
+//    // 退出登录
+//    @RequestMapping(value = "/loginOut", method = RequestMethod.GET)
+//    public String loginOut(HttpSession session) {
+//        userService.loginOut(session);
+//        return "redirect:Login";
+//    }
+
     // 登录页面
     @RequestMapping(value = "/Login", method = RequestMethod.GET)
     public String loingModel() {

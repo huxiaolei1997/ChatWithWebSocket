@@ -1,8 +1,10 @@
 package com.chat.service;
 
+import com.chat.model.Message;
 import com.chat.model.User;
 import com.chat.model.UserTest;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -12,10 +14,11 @@ import java.util.List;
 public interface UserService {
 
     /**
-     * 查询所有用户
+     * 查询用户好友
+     * @param user_id
      * @return
      */
-    List<UserTest> getUserAll();
+    List<User> getUserAllFriends(int user_id);
 
     /**
      * 检查用户名和密码是否正确
@@ -23,4 +26,11 @@ public interface UserService {
      * @return
      */
     User getUserByUserNameAndPassword(User user);
+
+    /**
+     * 获取和指定用户的聊天记录
+     * @param message
+     * @return
+     */
+    List<Message> getMessageRecord(Message message);
 }
