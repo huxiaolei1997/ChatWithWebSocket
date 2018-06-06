@@ -42,6 +42,7 @@ public class MessageController {
     public @ResponseBody Result<Message> sendMessage(@RequestBody Message message) {
         try {
             // 发送消息给指定的好友
+            logger.info(message.getFrom_user_id() + "发送了一条消息给" + message.getTo_user_id());
             myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.getContent()));
             // 保存消息内容到数据库中
             logger.info("保存消息内容到数据库中，消息内容是" + message.toString());

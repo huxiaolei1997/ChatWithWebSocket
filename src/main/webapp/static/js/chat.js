@@ -9,11 +9,11 @@ $(function() {
     setTimeout(function() {
         // 首先判断是否 支持 WebSocket
         if('WebSocket' in window) {
-            websocket = new WebSocket("ws://localhost:8088/ChatWithWebSocket/websocket");
+            websocket = new WebSocket("ws://10.62.174.143:8088/ChatWithWebSocket/websocket");
         } else if('MozWebSocket' in window) {
-            websocket = new MozWebSocket("ws://localhost:8088/ChatWithWebSocket/websocket");
+            websocket = new MozWebSocket("ws://10.62.174.143:8088/ChatWithWebSocket/websocket");
         } else {
-            websocket = new SockJS("http://localhost:8088/ChatWithWebSocket/sockjs/websocket");
+            websocket = new SockJS("http://10.62.174.143:8088/ChatWithWebSocket/sockjs/websocket");
         }
 
         // 打开时

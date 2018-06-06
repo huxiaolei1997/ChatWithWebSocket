@@ -90,6 +90,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 
     // 给指定用户发送消息
     public void sendMessageToUser(int clientId, WebSocketMessage<?> message) throws IOException {
+        logger.info("当前在线用户：" + users.toString());
         if (users.get(clientId) == null) {
             logger.info("MyWebSocketHandler, 未获取到目的用户信息");
             System.out.println("MyWebSocketHandler, 未获取到目的用户信息");
