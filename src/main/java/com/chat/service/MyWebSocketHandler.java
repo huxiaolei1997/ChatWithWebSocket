@@ -29,13 +29,13 @@ public class MyWebSocketHandler implements WebSocketHandler {
 //    d.sendMessageToAllUsers向左右用户广播消息，只需要传入消息体
 //
 //    e.handleTransportError连接出错处理，主要是关闭出错会话的连接，和删除在Map集合中的记录
-//
+
 //    f.afterConnectionClosed连接已关闭，移除在Map集合中的记录。
     // 日志
     private static final Logger logger = Logger.getLogger(MyWebSocketHandler.class);
 
     // 保存所有的用户session
-    //private static final ArrayList<WebSocketSession> users = new ArrayList<>();
+    // private static final ArrayList<WebSocketSession> users = new ArrayList<>();
 
     // 保存所有的用户session
     private static final Map<Integer, WebSocketSession> users = new HashMap<>();
@@ -55,6 +55,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
             System.out.println("MyWebSocketHandler, user_id:" + user_id + ", " + session);
             logger.info("MyWebSocketHandler, user_id:" + user_id + ", " + session);
         }
+        logger.info("当前在线总用户：" + users.size());
         System.out.println("MyWebSocketHandler, connect websocket success......." + session);
         //users.add(session);
     }
@@ -79,17 +80,18 @@ public class MyWebSocketHandler implements WebSocketHandler {
         // message.getPayload().toString() 获取消息具体内容
         Map<String, Object> msg = gson.fromJson(message.getPayload().toString(), new TypeToken<Map<String, Object>>(){}.getType());
         logger.info("MyWebSocketHandler, handleMessage......." + message.getPayload() + "..........." + msg);
-        System.out.println("MyWebSocketHandler, handleMessage......." + message.getPayload() + "..........." + msg);
+        // System.out.println("MyWebSocketHandler, handleMessage......." + message.getPayload() + "..........." + msg);
         // 处理消息 msgContent消息内容
-        //TextMessage textMessage = new TextMessage(msg.get("msgContent").toString(), true);
+        // TextMessage textMessage = new TextMessage(msg.get("msgContent").toString(), true);
         // 调用方法（发送消息给所有人）
-        //sendMsgToAllUsers(textMessage);
+        // sendMsgToAllUsers(textMessage);
         webSocketSession.sendMessage(message);
         System.out.println("MyWebSocketHandler, handleMessage()" + message);
     }
 
     // 给指定用户发送消息
     public void sendMessageToUser(int clientId, WebSocketMessage<?> message) throws IOException {
+        logger.info("给某个用户发送的消息内容是：" + message.toString());
         logger.info("当前在线用户：" + users.toString());
         if (users.get(clientId) == null) {
             logger.info("MyWebSocketHandler, 未获取到目的用户信息");
@@ -107,11 +109,6 @@ public class MyWebSocketHandler implements WebSocketHandler {
 
     // 给所用用户发送消息
     public void sendMsgToAllUsers(WebSocketMessage<?> message) throws IOException {
-//        for (WebSocketSession user : users) {
-//            user.sendMessage(message);
-//            System.out.println("user: " + user);
-//            //user.
-//        }
         Set<Integer> client_ids = users.keySet();
         WebSocketSession session;
         for (Integer client_id : client_ids) {

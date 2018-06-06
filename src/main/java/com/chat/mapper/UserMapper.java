@@ -80,6 +80,7 @@ public interface UserMapper {
             "from_user_id = #{message.from_user_id}) or " +
             "(to_user_id = #{message.from_user_id} " +
             "and " +
-            "from_user_id = #{message.to_user_id})")
+            "from_user_id = #{message.to_user_id}) " +
+            "order by send_time asc")
     List<Message> getMessageRecord(@Param("message") Message message);
 }

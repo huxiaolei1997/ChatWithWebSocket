@@ -25,15 +25,13 @@ $(function() {
         websocket.onmessage = function(evnt) {
             console.log("evet: " + evnt);
             console.log("收到了一条消息，消息内容是：" + evnt.data);
+            var data = JSON.parse(evnt.data);
             //$("#msg").append("<p>(<font color='red'>" + evnt.data + "</font>)</p>");
             $(".chat").append("<div class=\"sender\">" + "<div>"
                 + "<img src=\"static/images/avatar.jpg\">"
                 + "</div>" + "<div>" + "<div class=\"left_triangle\"></div>"
-                + "<span>" + evnt.data + "</span>" + "</div>" + "</div>");
+                + "<span>" + data.content + "</span>" + "</div>" + "</div>");
             // 滑动滚动条到底部
-            //console.log()
-            // $(".chat").scrollTop =  $(".chat").scrollHeight;
-            //document.getElementsByClassName("chat")[0].scrollIntoView(false);
             var chat = document.getElementsByClassName("chat")[0];
             chat.scrollTop = chat.scrollHeight;
             console.log("  websocket.onmessage   ");
@@ -58,8 +56,9 @@ $(function() {
             // 获取消息内容
             var message_content = $("#content").val();
             // 判断
-            if(message_content == null || message_content == ""){
+            if(message_content == null || message_content.trim() == ""){
                 alert("message_content can not empty!!");
+                $("#content").val("");
                 return false;
             }
             // 获取收信人的id

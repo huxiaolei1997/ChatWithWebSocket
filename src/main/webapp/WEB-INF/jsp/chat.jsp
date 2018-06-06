@@ -31,6 +31,7 @@
             </div>
             <div class="input-text">
                 <textarea id="content" style="width: 446px; height: 150px;" class="form-control"></textarea>
+                <button type="button" id="loginOut" class="btn btn-primary">退出登录</button>
                 <button type="button" id="sendMessage" style="float: right;margin-top: 3px;" class="btn btn-primary" data-to-user-id="">发送</button>
             </div>
         </div>

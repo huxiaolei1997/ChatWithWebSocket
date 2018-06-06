@@ -1,5 +1,7 @@
 package com.chat.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -66,12 +68,12 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", from_user_id=" + from_user_id +
-                ", to_user_id=" + to_user_id +
-                ", content='" + content + '\'' +
-                ", send_time=" + send_time +
+        return "{" +
+                "\"id\":" + id +
+                ", \"from_user_id\":" + from_user_id +
+                ", \"to_user_id\":" + to_user_id +
+                ", \"content\":\"" + content + "\"" +
+                ", \"send_time\":" + send_time.getTime() +
                 '}';
     }
 }
