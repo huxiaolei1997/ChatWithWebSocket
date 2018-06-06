@@ -31,6 +31,17 @@ public class UserServiceImpl implements UserService {
 
 
     /**
+     * 获取用户个人信息
+     * @param user_id
+     * @return
+     */
+    @Override
+    public User getUserInfo(int user_id) {
+        User user = userMapper.getUserInfo(user_id);
+        return user;
+    }
+
+    /**
      * 查询用户所有好友
      * @param user_id
      * @return

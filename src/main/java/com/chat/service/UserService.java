@@ -14,6 +14,13 @@ import java.util.List;
 public interface UserService {
 
     /**
+     * 获取用户个人信息
+     * @param user_id
+     * @return
+     */
+    User getUserInfo(int user_id);
+
+    /**
      * 查询用户好友
      * @param user_id
      * @return

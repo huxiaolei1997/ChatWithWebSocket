@@ -4,6 +4,7 @@ import com.chat.model.Message;
 import com.chat.model.Result;
 import com.chat.service.MessageService;
 import com.chat.service.MyWebSocketHandler;
+import com.chat.service.UserService;
 import com.chat.tools.ResultUtil;
 import com.sun.tracing.dtrace.Attributes;
 import org.apache.log4j.Logger;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.TextMessage;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 消息控制器
@@ -29,6 +32,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private UserService userService;
     // 日志
     private static final Logger logger = Logger.getLogger(MessageController.class);
 
@@ -47,5 +52,16 @@ public class MessageController {
             e.printStackTrace();
             return ResultUtil.error(1, e.getMessage());
         }
+    }
+
+    // 获取和某个用户的聊天记录
+    @RequestMapping(value = "getMessageRecord", method = RequestMethod.GET)
+    public @ResponseBody List<Message> getMessageRecord(HttpSession session, @RequestParam("to_user_id") Integer to_user_id) {
+        Integer from_user_id = (Integer) session.getAttribute("user_id");
+        Message message = new Message();
+        message.setTo_user_id(to_user_id);
+        message.setFrom_user_id(from_user_id);
+        List<Message> messageList = userService.getMessageRecord(message);
+        return messageList;
     }
 }

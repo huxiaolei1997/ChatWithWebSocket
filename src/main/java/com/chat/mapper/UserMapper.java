@@ -16,6 +16,15 @@ import java.util.List;
 public interface UserMapper {
 
     /**
+     * 获取用户信息
+     * @param user_id
+     * @return
+     */
+    @Transactional(readOnly = true)
+    @Select("select id, user_name as userName, age from user_info where id = #{user_id}")
+    User getUserInfo(@Param("user_id") int user_id);
+
+    /**
      * 查询用户好友
      * @return
      */
