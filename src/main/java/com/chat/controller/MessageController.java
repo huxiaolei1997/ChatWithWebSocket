@@ -3,10 +3,9 @@ package com.chat.controller;
 import com.chat.model.Message;
 import com.chat.model.Result;
 import com.chat.service.MessageService;
-import com.chat.service.MyWebSocketHandler;
+import com.chat.serviceImpl.MyWebSocketHandler;
 import com.chat.service.UserService;
 import com.chat.tools.ResultUtil;
-import com.sun.tracing.dtrace.Attributes;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,11 +42,17 @@ public class MessageController {
         try {
             // 发送消息给指定的好友
             logger.info(message.getFrom_user_id() + "发送了一条消息给" + message.getTo_user_id());
-            //myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.getContent()));
-            myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.toString()));
-            // 保存消息内容到数据库中
-            logger.info("保存消息内容到数据库中，消息内容是" + message.toString());
-            messageService.saveChatRecord(message);
+            // 如果用户在线则直接发送消息，并保存消息到数据库中
+            if (myWebSocketHandler.checkUserIfOnline(message.getTo_user_id())) {
+                myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.toString()));
+                // 保存消息内容到数据库中
+                logger.info("用户在线，保存消息内容到数据库中，消息内容是" + message.toString());
+                messageService.saveChatRecord(message);
+            } else {
+                // 保存消息内容到数据库中
+                logger.info("用户不在线，先保存消息内容到数据库中，消息内容是" + message.toString());
+                messageService.saveChatRecord(message);
+            }
             return ResultUtil.success(message);
         } catch (IOException e) {
             logger.info("LoginController, sendMessage() " + e.getMessage());

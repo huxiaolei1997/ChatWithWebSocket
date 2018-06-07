@@ -35,6 +35,13 @@ public interface UserService {
     User getUserByUserNameAndPassword(User user);
 
     /**
+     * 检查用户名是否存在
+     * @param userName
+     * @return
+     */
+    long checkUserNameIfExist(String userName);
+
+    /**
      * 获取和指定用户的聊天记录
      * @param message
      * @return

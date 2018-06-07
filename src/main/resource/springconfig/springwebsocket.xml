@@ -51,7 +51,7 @@
      <bean id="exceptionHandler" class="com.chat.exception.DefaultExceptionHandler" />
 
     <!-- websocket处理类 -->
-    <bean id="myHandler" class="com.chat.service.MyWebSocketHandler"/>
+    <bean id="myHandler" class="com.chat.serviceImpl.MyWebSocketHandler"/>
 
     <!-- 握手接口/拦截器 -->
     <bean id="myInterceptor" class="com.chat.interceptor.WebSocketInterceptor"/>

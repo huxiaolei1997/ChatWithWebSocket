@@ -1,8 +1,7 @@
 package com.chat.socketconfig;
 
 import com.chat.interceptor.WebSocketInterceptor;
-import com.chat.service.MyWebSocketHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.chat.serviceImpl.MyWebSocketHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;

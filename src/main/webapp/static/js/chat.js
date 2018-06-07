@@ -1,10 +1,12 @@
 $(function() {
     // 设置默认发送信息给第一个好友
     var to_user_id_default = $(".message").eq(0).attr("data-user-list-id");
+    $(".message").eq(0).addClass("user-select");
     console.log("默认发送消息给第一个好友：" + to_user_id_default);
     $("#sendMessage").attr("data-to-user-id", to_user_id_default);
     // 默认获取和第一个好友的聊天记录
     getChatRecord(to_user_id_default);
+
     var websocket;
     setTimeout(function() {
         // 首先判断是否 支持 WebSocket
@@ -110,6 +112,12 @@ $(function() {
 
     // 点击获取好友的聊天记录
     $(".message").click(function() {
+       $(".user").each(function() {
+           if ($(this).hasClass("user-select")) {
+               $(this).removeClass("user-select");
+           }
+       });
+       $(this).addClass("user-select");
         // 获取当前和自己聊天的用户id
         var to_user_id = $(this).attr("data-user-list-id");
         getChatRecord(to_user_id);

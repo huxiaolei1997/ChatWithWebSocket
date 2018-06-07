@@ -2,6 +2,7 @@ package com.chat.controller;
 
 import com.chat.model.Result;
 import com.chat.model.User;
+import com.chat.service.ToolsService;
 import com.chat.service.UserService;
 import com.chat.tools.Constant;
 import com.chat.tools.ResultUtil;
@@ -30,68 +31,68 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // 用户登录
-//    @RequestMapping("/login/{user_id}")
-//    public @ResponseBody String login(HttpSession session, @PathVariable("user_id") Integer user_id) {
-//        System.out.println("LoginController : 当前登录的用户的id是：" + user_id);
-//        session.setAttribute("user_id", user_id);
-//        //System.out.println(session.getAttribute("user_id"));
-//        return "success";
-//    }
+    @Autowired
+    private ToolsService toolsService;
 
+    // 检查验证码是否正确
+    @RequestMapping(value = "/checkCaptcha", method = RequestMethod.POST)
+    public @ResponseBody Result checkCaptcha(HttpSession session, @RequestParam("captcha_client") String captcha_client) {
+        String captcha_server = (String) session.getAttribute("captcha");
+        logger.info("开始检查验证码是否正确，captcha_client = " + captcha_client + ", captcha_server = " + captcha_server);
+        if (captcha_client != null && captcha_client.equalsIgnoreCase(captcha_server)) {
+            logger.info("验证码校验正确");
+            return ResultUtil.success(0, "验证码校验正确");
+        } else {
+            return ResultUtil.error(1, "验证码校验失败");
+        }
+    }
+
+    // 检查用户的用户名密码是否正确
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody Result<User> login(HttpSession session, @RequestBody User user) {
         logger.info("user:" + user.toString());
         User user2 = userService.getUserByUserNameAndPassword(user);
         System.out.println("LoginController : 当前请求登录的用户名是：" + user.getUserName());
-
         if (user2 != null) {
             logger.info("当前请求登录的用户名是：" + user2.getUserName());
             session.setAttribute("user_id", user2.getId());
-            //result.setCode(0);
-            // result.setData(user2);
-            //result.setMsg("用户校验成功");
             return ResultUtil.success(user2);
         } else {
-            return ResultUtil.error(1, "查询用户失败");
+            return ResultUtil.error(1, "用户名不存在或密码错误");
         }
     }
-
-//    // 退出登录
-//    @RequestMapping(value = "/loginOut", method = RequestMethod.GET)
-//    public String loginOut(HttpSession session) {
-//        userService.loginOut(session);
-//        return "redirect:Login";
-//    }
 
     // 登录页面
     @RequestMapping(value = "/Login", method = RequestMethod.GET)
     public String loingModel() {
-        //List<UserTest> userTestList = userService.getUserAll();
-        //logger.info("userTestList:" + userTestList.toString());
-        //System.out.println(userTestList.toString());
         return "login";
+    }
+
+    // 用户注册界面
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register() {
+        return "register";
+    }
+
+    // 检查用户名是否存在
+    @RequestMapping(value = "/checkUserNameIfExist", method = RequestMethod.POST)
+    public @ResponseBody Result checkUserNameIfExist(@RequestParam("userName") String userName) {
+        logger.info("检查 " + userName + " 是否存在");
+        long if_user_name_exist = userService.checkUserNameIfExist(userName);
+        if (if_user_name_exist == 1) {
+            //Result result = new Result();
+            logger.info(userName + " 已经被占用");
+            return ResultUtil.error(1, "该用户名已经被占用");
+        } else if (if_user_name_exist == 0) {
+            logger.info(userName + " 可用");
+            return ResultUtil.error(0, "该用户名可用");
+        }
+        return null;
     }
 
     // 生成验证码
     @RequestMapping(value = "/captcha", method = RequestMethod.GET)
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        // 获得 当前请求 对应的 会话对象
-        HttpSession session = request.getSession();
-        logger.info("开始生成验证码");
-        final int width = 180; // 图片宽度
-        final int height = 40; // 图片高度
-        final String imgType = "jpeg"; // 指定图片格式 (不是指MIME类型)
-        OutputStream output = null;
-        try {
-            output = response.getOutputStream();// 获得可以向客户端返回图片的输出流
-            logger.info("验证码生成成功！"); // (字节流)
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // 创建验证码图片并返回图片上的字符串
-        String code = Constant.createCaptcha(width, height, imgType, output);
-        // 建立 uri 和 相应的 验证码 的关联 ( 存储到当前会话对象的属性中 )
-        session.setAttribute("captcha", code);
+        toolsService.makeCaptcha(request, response);
     }
 }

@@ -15,10 +15,10 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/chat.css" rel="stylesheet" type="text/css">
 </head>
-<body style="background-color:#00B4EF;">
+<body style="background-color:white;">
 <div class="container">
     <div class="row" style="margin-top: 8%;">
-        <div class="col-md-offset-3 col-md-6" style="border: 1px solid black; width: 600px;height: 550px;padding: 0px; border-radius: 5px;">
+        <div class="col-md-offset-3 col-md-6 chatbox">
             <div class="user-list">
                 <c:forEach items="${userList}" var="user">
                     <span class="user message" data-user-list-id="${user.id}">

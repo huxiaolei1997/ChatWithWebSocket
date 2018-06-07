@@ -11,7 +11,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>登录页面</title>
+    <title>注册账号</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         .form-bg{
@@ -148,7 +148,7 @@
     <div class="row" style="margin-top: 10%;">
         <div class="col-md-offset-3 col-md-6">
             <form class="form-horizontal">
-                <span class="heading">用户登录</span>
+                <span class="heading">用户注册</span>
                 <div class="form-group">
                     <input type="text" class="form-control" id="userName" placeholder="用户名" maxlength="20">
                     <i class="fa fa-user"></i>
@@ -158,12 +158,17 @@
                     <i class="fa fa-lock"></i>
                     <a href="#" class="fa fa-question-circle"></a>
                 </div>
+                <div class="form-group help">
+                    <input type="password" class="form-control" id="repeatpassword" placeholder="请再次输入密码" maxlength="20">
+                    <i class="fa fa-lock"></i>
+                    <a href="#" class="fa fa-question-circle"></a>
+                </div>
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="验证码" style="width: 290px;float: left;" id="captcha" maxlength="6"><img src="captcha" class="update-captcha" alt="验证码" style="display: inline-block;float: right;">
                 </div>
                 <div class="form-group">
-                    <span class="text">没有账号，立即去<a href="register">注册</a></span>
-                    <button type="button" class="btn btn-default" id="userLogin">登录</button>
+                    <span class="text">已有账号，立即去<a href="Login">登录</a></span>
+                    <button type="button" class="btn btn-default" id="register">现在注册</button>
                 </div>
                 <div class="form-group">
                     <span class="msgtips" id="msgtips" style="color: red; font-size: 16px;"></span>
@@ -174,6 +179,6 @@
 </div>
 <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="static/js/login.js"></script>
+<script type="text/javascript" src="static/js/register.js"></script>
 </body>
 </html>

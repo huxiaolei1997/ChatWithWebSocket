@@ -83,4 +83,13 @@ public interface UserMapper {
             "from_user_id = #{message.to_user_id}) " +
             "order by send_time asc")
     List<Message> getMessageRecord(@Param("message") Message message);
+
+    /**
+     * 检查用户名是否已经存在
+     * @param userName
+     * @return
+     */
+    @Transactional(readOnly = true)
+    @Select("select count(id) from user_info where user_name = #{userName}")
+    long checkUserIfExist(@Param("userName") String userName);
 }

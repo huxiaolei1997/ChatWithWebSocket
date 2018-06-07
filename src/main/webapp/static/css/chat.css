@@ -3,31 +3,43 @@
     float: left;
     height: 548px;
     width: 150px;
-    border: 1px solid red;
+    border: 1px solid #3BABFF;
     display: inline-block;
+}
+
+.user-select {
+    background-color: #c1c1c1;
 }
 
 .chat {
     float: right;
     width: 448px;
     height: 350px;
-    border: 1px solid blue;
+    border: 1px solid #3BABFF;
     background-color: white;
     overflow: auto;
 }
 
+.chatbox {
+    border: 1px solid #3BABFF;
+    width: 600px;
+    height: 550px;
+    padding: 0px;
+    border-radius: 5px;
+}
 .input-text {
     width: 448px;
     height: 198px;
-    border: 1px solid black;
+    /*border: 1px solid #3BABFF;*/
     float: right;
 }
 
 .user {
     width: 148px;
     height: 45px;
-    border: 1px solid black;
+    border-bottom: 1px solid #3BABFF;
     display: block;
+    cursor: pointer;
 }
 
 .avatar {

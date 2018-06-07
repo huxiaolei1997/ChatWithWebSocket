@@ -1,14 +1,14 @@
-package com.chat.service;
+package com.chat.serviceImpl;
 
+import com.chat.mapper.MessageMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,18 +31,18 @@ public class MyWebSocketHandler implements WebSocketHandler {
 //    e.handleTransportError连接出错处理，主要是关闭出错会话的连接，和删除在Map集合中的记录
 
 //    f.afterConnectionClosed连接已关闭，移除在Map集合中的记录。
+
+// 保存所有的用户session
+// private static final ArrayList<WebSocketSession> users = new ArrayList<>();
     // 日志
     private static final Logger logger = Logger.getLogger(MyWebSocketHandler.class);
-
-    // 保存所有的用户session
-    // private static final ArrayList<WebSocketSession> users = new ArrayList<>();
 
     // 保存所有的用户session
     private static final Map<Integer, WebSocketSession> users = new HashMap<>();
 
     // 用户标识
     private static final String CLIENT_ID = "user_id";
-    
+
     // 连接就绪时
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -58,18 +58,6 @@ public class MyWebSocketHandler implements WebSocketHandler {
         logger.info("当前在线总用户：" + users.size());
         System.out.println("MyWebSocketHandler, connect websocket success......." + session);
         //users.add(session);
-    }
-
-    // 获取用户标识
-    private Integer getClientId(WebSocketSession session) {
-        try {
-            Integer clientId = (Integer) session.getAttributes().get(CLIENT_ID);
-            return clientId;
-        } catch (Exception e) {
-            logger.info("MyWebSocketHandler, getClientId():" + e.getMessage());
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
     // 处理信息，可以对H5 Websocket的send方法进行处理
@@ -95,7 +83,6 @@ public class MyWebSocketHandler implements WebSocketHandler {
         logger.info("当前在线用户：" + users.toString());
         if (users.get(clientId) == null) {
             logger.info("MyWebSocketHandler, 未获取到目的用户信息");
-            System.out.println("MyWebSocketHandler, 未获取到目的用户信息");
             return;
         }
         WebSocketSession session = users.get(clientId);
@@ -144,5 +131,26 @@ public class MyWebSocketHandler implements WebSocketHandler {
     @Override
     public boolean supportsPartialMessages() {
         return false;
+    }
+
+    // 获取用户标识
+    private Integer getClientId(WebSocketSession session) {
+        try {
+            Integer clientId = (Integer) session.getAttributes().get(CLIENT_ID);
+            return clientId;
+        } catch (Exception e) {
+            logger.info("MyWebSocketHandler, getClientId():" + e.getMessage());
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    // 判断用户是否在线
+    public boolean checkUserIfOnline(int user_id) {
+        boolean if_online = true;
+        if (users.get(user_id) == null) {
+            if_online = false;
+        }
+        return if_online;
     }
 }

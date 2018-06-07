@@ -3,14 +3,14 @@ package com.chat.serviceImpl;
 import com.chat.mapper.UserMapper;
 import com.chat.model.Message;
 import com.chat.model.User;
-import com.chat.service.MyWebSocketHandler;
 import com.chat.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -59,8 +59,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUserByUserNameAndPassword(User user) {
-        User user2 = userMapper.getUserByUserNameAndPassword(user);
-        return user2;
+        return userMapper.getUserByUserNameAndPassword(user);
+    }
+
+    /**
+     * 检查用户名是否存在
+     *
+     * @param userName
+     * @return
+     */
+    @Override
+    public long checkUserNameIfExist(String userName) {
+        return userMapper.checkUserIfExist(userName);
     }
 
     /**
@@ -74,4 +84,5 @@ public class UserServiceImpl implements UserService {
         List<Message> messageList = userMapper.getMessageRecord(message);
         return messageList;
     }
+
 }
