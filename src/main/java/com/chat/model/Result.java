@@ -1,5 +1,7 @@
 package com.chat.model;
 
+import java.util.Map;
+
 /**
  * http 请求返回的最外层对象
  * @author  xiaolei hu
@@ -39,4 +41,22 @@ public class Result<T> {
     public void setData(T data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"code\":" + code +
+                ", \"msg\":\"" + msg +
+                "\", \"data\":" + data +
+                '}';
+    }
+
+//    public static void main(String[] args) {
+//        Result result = new Result();
+//        result.setCode(0);
+//        result.setMsg("test");
+//        result.setData(null);
+//        //Map<String, Object> resultMap = (Map<String, Object>) result;
+//        System.out.println(result.toString());
+//    }
 }

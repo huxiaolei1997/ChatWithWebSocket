@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:websocket="http://www.springframework.org/schema/websocket"
        xsi:schemaLocation="
@@ -12,10 +13,15 @@
             http://www.springframework.org/schema/mvc
             http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
             http://www.springframework.org/schema/websocket
-            http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
+            http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
     <!-- 扫描controller -->
     <context:component-scan base-package="com.chat.controller"/>
+
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
     <!-- 设置默认配置方案  -->
     <mvc:annotation-driven>
         <!-- 设置不使用默认的消息转换器 -->
@@ -40,6 +46,9 @@
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
+    <!-- 全局异常处理 -->
+     <bean id="exceptionHandler" class="com.chat.exception.DefaultExceptionHandler" />
 
     <!-- websocket处理类 -->
     <bean id="myHandler" class="com.chat.service.MyWebSocketHandler"/>
