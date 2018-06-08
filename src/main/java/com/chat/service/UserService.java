@@ -1,5 +1,6 @@
 package com.chat.service;
 
+import com.chat.model.Friend;
 import com.chat.model.Message;
 import com.chat.model.User;
 import com.chat.model.UserTest;
@@ -47,4 +48,36 @@ public interface UserService {
      * @return
      */
     List<Message> getMessageRecord(Message message);
+
+    /**
+     * 保存注册的用户到数据库中
+     * @param user
+     */
+    void saveRegisterUser(User user);
+
+    /**
+     * 根据用户名查找用户（不显示自己）
+     * @param userName
+     * @return
+     */
+    List<User> findUserByUserName(String userName, int user_id);
+
+    /**
+     * 保存好友请求到数据库中
+     * @param message
+     */
+    void saveFriendRequest(Message message);
+
+    /**
+     * 处理好友请求
+     * @param friend
+     */
+    void processUserRequest(Friend friend);
+
+    /**
+     * 根据 user_id 获取和当前用户有关的好友验证请求
+     * @param user_id
+     * @return
+     */
+    List<Friend> getUserRequestByUserId(int user_id);
 }

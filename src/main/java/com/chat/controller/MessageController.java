@@ -5,6 +5,7 @@ import com.chat.model.Result;
 import com.chat.service.MessageService;
 import com.chat.serviceImpl.MyWebSocketHandler;
 import com.chat.service.UserService;
+import com.chat.tools.Constant;
 import com.chat.tools.ResultUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,9 @@ public class MessageController {
         Message message = new Message();
         message.setTo_user_id(to_user_id);
         message.setFrom_user_id(from_user_id);
+        message.setMessage_type(Constant.NORMAL_MESSAGE);
         List<Message> messageList = userService.getMessageRecord(message);
         return messageList;
     }
+
 }

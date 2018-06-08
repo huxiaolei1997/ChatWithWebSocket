@@ -1,7 +1,5 @@
 package com.chat.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -22,6 +20,9 @@ public class Message implements Serializable {
 
     // 消息主体内容
     private String content;
+
+    // 消息类型 （0 表示普通消息，1 表示验证消息）
+    private int message_type;
 
     // 发送时间
     private Timestamp send_time;
@@ -58,6 +59,14 @@ public class Message implements Serializable {
         this.content = content;
     }
 
+    public int getMessage_type() {
+        return message_type;
+    }
+
+    public void setMessage_type(int message_type) {
+        this.message_type = message_type;
+    }
+
     public Timestamp getSend_time() {
         return send_time;
     }
@@ -73,6 +82,7 @@ public class Message implements Serializable {
                 ", \"from_user_id\":" + from_user_id +
                 ", \"to_user_id\":" + to_user_id +
                 ", \"content\":\"" + content + "\"" +
+                ", \"message_type\":" + message_type +
                 ", \"send_time\":" + send_time.getTime() +
                 '}';
     }

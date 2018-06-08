@@ -7,6 +7,7 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,8 +19,8 @@
 <body style="background-color:white;">
 <div class="container">
     <div class="row" style="margin-top: 8%;">
-        <div class="col-md-offset-3 col-md-6 chatbox">
-            <div class="user-list">
+        <div class="col-md-offset-2 col-md-6 chatbox">
+            <div class="user-list" data-user-list-length="${fn:length(userList)}">
                 <c:forEach items="${userList}" var="user">
                     <span class="user message" data-user-list-id="${user.id}">
                         <img src="static/images/avatar.jpg" alt="avatar" class="avatar"><span>${user.userName}</span>
@@ -33,6 +34,48 @@
                 <textarea id="content" style="width: 446px; height: 150px;" class="form-control"></textarea>
                 <button type="button" id="loginOut" class="btn btn-primary">退出登录</button>
                 <button type="button" id="sendMessage" style="float: right;margin-top: 3px;" class="btn btn-primary" data-to-user-id="">发送</button>
+            </div>
+        </div>
+        <div class="col-md-2 settingsbox">
+            <div id="settings">
+                <span class="add-friend span-select">添加好友</span><span class="system-message">验证消息</span>
+            </div>
+            <div id="add-user" style="display: block;">
+                <span>请输入您要添加为好友的用户名</span>
+                <input type="text" style="font-size: 12px; width: 140px; display: inline-block;" class="form-control" id="userName" placeholder="请输入您要添加为好友的用户名" maxlength="20"/>
+                <button type="button" class="btn btn-primary" id="find-user">查找</button>
+                <div id="find-result-list">
+                    <ul>
+                        <li><span>搜索结果</span></li>
+
+                    </ul>
+                </div>
+                <nav>
+                    <ul class="pager">
+                        <li><a href="#" class="prev">上一页</a></li>
+                        <li><a href="#" class="next">下一页</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="system-message" style="display: none;">
+                <div>
+                    <ul>
+                        <li data-request-user-id="11"><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+                    </ul>
+                </div>
+                <nav>
+                    <ul class="pager">
+                        <li><a href="#" class="prev">上一页</a></li>
+                        <li><a href="#" class="next">下一页</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

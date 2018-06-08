@@ -16,6 +16,22 @@ import javax.imageio.ImageIO;
  * @date 2018/6/4 17:45
  **/
 public class Constant {
+
+    // 表示普通消息
+    public final static int NORMAL_MESSAGE = 0;
+
+    // 表示验证消息
+    public final static int VERIFACTION_MESSAGE = 1;
+
+    // 表示接受了该请求
+    public final static int ACCESS = 0;
+
+    // 表示拒绝了该请求
+    public final static int DENY = 1;
+
+    // 表示该消息未被处理
+    public final static int UNPROCESSED = 2;
+
     /**
      * 以字符串形式返回生成的验证码，同时输出一个图片
      *

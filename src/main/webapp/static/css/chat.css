@@ -7,7 +7,7 @@
     display: inline-block;
 }
 
-.user-select {
+.user-select, .user:hover {
     background-color: #c1c1c1;
 }
 
@@ -27,6 +27,24 @@
     padding: 0px;
     border-radius: 5px;
 }
+
+.settingsbox {
+    border: 1px solid #3BABFF;
+    width: 200px;
+    height: 550px;
+    padding: 0px;
+    border-radius: 5px;
+}
+
+.settingsbox #settings span {
+    width: 99px;
+    height: 30px;
+    display: inline-block;
+    border: 1px solid #3BABFF;
+    line-height: 30px;
+    padding-left: 19px;
+}
+
 .input-text {
     width: 448px;
     height: 198px;
@@ -49,6 +67,54 @@
     margin-right: 15px;
 }
 
+#settings span:hover, .span-select {
+    cursor: pointer;
+    background-color: #c1c1c1;
+}
+
+#find-result-list {
+    width: 198px;
+    height: auto;
+    /*border: 1px solid red;*/
+    margin-top: 30px;
+}
+
+#system-message div ul li {
+    list-style: none;
+    width: 198px;
+    display: inline-block;
+    border-bottom: 1px solid #3BABFF;
+    margin-left: -40px;
+}
+
+#system-message div ul span, #system-message div ul button {
+    margin-left: 20px;
+}
+
+#system-message div ul li button {
+    height: 25px;
+    font-size: 12px;
+}
+
+#find-result-list ul li{
+    display: inline-block;
+    list-style: none;
+    width: 198px;
+    height: 30px;
+    border-bottom: 1px solid #3BABFF;
+    margin-left: -40px;
+    /*margin-bottom: 3px;*/
+    line-height: 30px;
+}
+
+#find-result-list ul li button {
+    float: right;
+    height: 25px;
+    font-size: 12px;
+}
+/*#find-result-list ul {*/
+    /*float: left;*/
+/*}*/
 /** 聊天气泡效果 **/
 .sender{
     clear:both;

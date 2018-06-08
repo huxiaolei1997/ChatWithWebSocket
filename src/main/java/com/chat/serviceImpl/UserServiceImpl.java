@@ -1,9 +1,11 @@
 package com.chat.serviceImpl;
 
 import com.chat.mapper.UserMapper;
+import com.chat.model.Friend;
 import com.chat.model.Message;
 import com.chat.model.User;
 import com.chat.service.UserService;
+import com.chat.tools.Constant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> getUserAllFriends(int user_id) {
-        List<User> userList = userMapper.getUserAllFriends(user_id);
+        List<User> userList = userMapper.getUserAllFriends(user_id, Constant.ACCESS);
         return userList;
     }
 
@@ -83,6 +85,59 @@ public class UserServiceImpl implements UserService {
     public List<Message> getMessageRecord(Message message) {
         List<Message> messageList = userMapper.getMessageRecord(message);
         return messageList;
+    }
+
+    /**
+     * 保存注册的用户到数据库中
+     *
+     * @param user
+     */
+    @Override
+    public void saveRegisterUser(User user) {
+        userMapper.saveRegisterUser(user);
+    }
+
+    /**
+     * 根据用户名查找用户
+     *
+     * @param userName
+     * @return
+     */
+    @Override
+    public List<User> findUserByUserName(String userName, int user_id) {
+        return userMapper.findUserByUserName(userName, user_id);
+    }
+
+    /**
+     * 保存好友请求到数据库中
+     *
+     * @param message
+     */
+    @Override
+    public void saveFriendRequest(Message message) {
+        userMapper.saveFriendRequest(message);
+    }
+
+    /**
+     * 处理好友请求
+     *
+     * @param friend
+     */
+    @Override
+    public void processUserRequest(Friend friend) {
+        userMapper.processUserRequest(friend);
+    }
+
+    /**
+     * 根据 user_id 获取和当前用户有关的好友验证请求
+     *
+     * @param user_id
+     * @return
+     */
+    @Override
+    public List<Friend> getUserRequestByUserId(int user_id) {
+        List<Friend> friendList = userMapper.getUserRequestByUserId(user_id);
+        return friendList;
     }
 
 }
