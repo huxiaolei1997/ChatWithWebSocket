@@ -166,15 +166,16 @@ public class UserController {
         logger.info("和" + user_id + "有关的好友请求是：" + friendList.toString());
         String processResult = "";
         List<MessageProcessResult<User>> messageProcessResultList = new ArrayList<>();
-        MessageProcessResult<User> messageProcessResult = new MessageProcessResult<>();
+        MessageProcessResult<User> messageProcessResult;
         User fromUser;
         User toUser;
         int index = 0;
         for (Friend friend : friendList) {
+            messageProcessResult = new MessageProcessResult<>();
             logger.info("这是第" + index + "循环");
-             fromUser = userService.getUserInfo(friend.getA_id());
-             toUser = userService.getUserInfo(friend.getB_id());
-             //logger.info("fromUs");
+            fromUser = userService.getUserInfo(friend.getA_id());
+            toUser = userService.getUserInfo(friend.getB_id());
+            //logger.info("fromUs");
             logger.info("fromUser:" + fromUser.toString() + ", getA_id() = " + friend.getA_id() + ", toUser" + toUser.toString() + ", getB_id() = " + friend.getB_id());
             // 自己添加好友
             if (friend.getA_id() == user_id) {
@@ -208,4 +209,32 @@ public class UserController {
         logger.info("验证消息的处理结果是：" + messageProcessResultList.toString());
         return messageProcessResultList;
     }
+
+//    public static void main(String[] args) {
+//        List<Friend> friendList = null;
+//        friendList = new ArrayList<>();
+//
+//        Friend friend;
+//        friend = new Friend();
+//        friend.setA_id(105);
+//        friend.setB_id(106);
+//        friend.setStatus(0);
+//        friendList.add(friend);
+//        System.out.println(friendList.toString());
+//
+//        friend = new Friend();
+//        friend.setA_id(105);
+//        friend.setB_id(7);
+//        friend.setStatus(0);
+//        friendList.add(friend);
+//        System.out.println(friendList.toString());
+//
+//        friend = new Friend();
+//        friend.setA_id(107);
+//        friend.setB_id(105);
+//        friend.setStatus(0);
+//        friendList.add(friend);
+//        System.out.println(friendList.toString());
+//        //System.out.println(friendList.toString());
+//    }
 }
