@@ -1,9 +1,6 @@
 package com.chat.service;
 
-import com.chat.model.Friend;
-import com.chat.model.Message;
-import com.chat.model.User;
-import com.chat.model.UserTest;
+import com.chat.model.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -75,9 +72,9 @@ public interface UserService {
     void processUserRequest(Friend friend);
 
     /**
-     * 根据 user_id 获取和当前用户有关的好友验证请求
-     * @param user_id
+     * 获取和当前用户有关的好友验证请求及处理结果
+     * @param session
      * @return
      */
-    List<Friend> getUserRequestByUserId(int user_id);
+    List<MessageProcessResult<User>> getUserRequestByUserId(HttpSession session);
 }

@@ -74,14 +74,18 @@ $(function() {
             var message_content = $("#content").val();
             // 判断
             if(message_content == null || message_content.trim() == ""){
-                alert("message_content can not empty!!");
+                //alert("message_content can not empty!!");
+                var msg = "消息内容不能为空";
+                msgtips(msg);
                 $("#content").val("");
                 return false;
             }
             // 获取收信人的id
             var to_user_id = $(this).attr("data-to-user-id");
             if (to_user_id == null || to_user_id == "") {
-                alert("获取不到收信人的id");
+                //alert("获取不到收信人的id");
+                var msg = "获取不到收信人的id";
+                msgtips(msg);
                 return false;
             }
             console.log("收信人id:" + to_user_id);
@@ -89,7 +93,9 @@ $(function() {
             var from_user_id = $(".chat").attr("data-user-id");
             console.log("发信人id:" + from_user_id);
             if (from_user_id == null || from_user_id == "") {
-                alert("获取不到发信人的id");
+                //alert("获取不到发信人的id");
+                var msg = "获取不到发信人的id";
+                msgtips(msg);
                 return false;
             }
             // 发送时间
@@ -200,6 +206,7 @@ $(function() {
         $(".system-message").removeClass("span-select");
         $("#system-message").css('display', 'none');
         $("#add-user").css('display', 'block');
+        $("#find-result-list ul").html("");
     });
 
     // 查找用户
@@ -208,7 +215,9 @@ $(function() {
         var userName = $("#userName").val().trim();
 
         if (userName == null || userName == "") {
-            alert("请输入要查找的用户名");
+            //alert("请输入要查找的用户名");
+            var msg = "请输入要查找的用户名";
+            msgtips(msg);
             return false;
         }
 
@@ -242,12 +251,16 @@ $(function() {
                     //alert(a_id + ", " + b_id);
                     //return false;
                     if (from_user_id == null || from_user_id == "") {
-                        alert("获取不到a_id的值");
+                        //alert("获取不到a_id的值");
+                        var msg = "获取不到a_id的值";
+                        msgtips(msg);
                         return false;
                     }
 
                     if (to_user_id == null || to_user_id == "") {
-                        alert("获取不到b_id的值");
+                        //alert("获取不到b_id的值");
+                        var msg = "获取不到b_id的值";
+                        msgtips(msg);
                         return false;
                     }
                     // $.ajax({
@@ -279,7 +292,9 @@ $(function() {
                         contentType: "application/json",
                         success: function (response) {
                             $("#find-result-list ul li").eq(index).find("button").removeAttr("disabled");
-                            alert(response.msg);
+                            //alert(response.msg);
+                            //var msg = "获取不到b_id的值";
+                            msgtips(response.msg);
                         },
                         error: function() {
 
@@ -294,12 +309,14 @@ $(function() {
 
     });
 
-    // 系统消息面板
+    // 验证消息面板
     $(".system-message").click(function() {
         $(this).addClass("span-select");
         $(".add-friend").removeClass("span-select");
         $("#system-message").css('display', 'block');
         $("#add-user").css('display', 'none');
+        // 获取当前登录的用户的用户id
+        var user_id = $(".chat").attr("data-user-id");
 
         $.ajax({
             url: "getVerificationResult",
@@ -307,6 +324,28 @@ $(function() {
             dataType: "json",
             success: function (response) {
                 console.log("验证消息处理结果是：" + response);
+                var dataVerification = "";
+                for (key in response) {
+                    if (response[key].status == 2) {
+                        if (response[key].data1.id != user_id) {
+                            dataVerification += "<li data-from-user-id=\"" +
+                            response[key].data1.id + "\"><span>" + response[key].process_result +
+                            "</span><br><button class=\"user-request btn btn-primary\" user-status=\"0\">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                            "<button class=\"user-request btn btn-primary\" user-status=\"1\">拒绝</button></li>";
+                        } else {
+                            dataVerification += "<li data-from-user-id=\"" +
+                                response[key].data1.id + "\"><span>" + response[key].process_result +
+                                "</span><br>" + "</li>";
+                        }
+                    } else {
+                        dataVerification += "<li data-from-user-id=\"" +
+                            response[key].data1.id + "\"><span>" + response[key].process_result +
+                            "</span><br>" + "</li>";
+                    }
+                    //
+                }
+                console.log(dataVerification);
+                $("#system-message div ul").html(dataVerification);
             },
             error: function () {
                 
@@ -314,7 +353,7 @@ $(function() {
         });
     });
 
-    // 接受好友请求
+    // 处理好友请求
     $("body").on("click", ".user-request", function () {
         // 获取当前登录的用户的用户id
         var b_id = $(".chat").attr("data-user-id");
@@ -324,17 +363,23 @@ $(function() {
         var status = $(this).attr("user-status");
 
         if (b_id == null || b_id == "") {
-            alert("b_id的值获取不到");
+            //alert("b_id的值获取不到");
+            var msg = "b_id的值获取不到";
+            msgtips(msg);
             return false;
         }
 
         if (a_id == null || a_id == "") {
-            alert("a_id的值获取不到");
+            //alert("a_id的值获取不到");
+            var msg = "a_id的值获取不到";
+            msgtips(msg);
             return false;
         }
 
         if (status == null || status == "") {
-            alert("status的值获取不到");
+            //alert("status的值获取不到");
+            var msg = "status的值获取不到";
+            msgtips(msg);
             return false;
         }
 
@@ -350,12 +395,22 @@ $(function() {
             dataType: "json",
             contentType: "application/json",
             success: function (response) {
-                alert(response.msg);
+                $(".system-message").click();
+                msgtips(response.msg);
+                //alert(response.msg);
             },
             error: function () {
 
             }
         });
     });
+
+    var msgtips = function(msg) {
+        $(".alert-success").css("display", "block");
+        $(".alert-success").html(msg);
+        setTimeout(function () {
+            $(".alert-success").css("display", "none");
+        }, 1500);
+    }
 });
 

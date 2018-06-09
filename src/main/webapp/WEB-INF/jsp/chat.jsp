@@ -19,6 +19,11 @@
 <body style="background-color:white;">
 <div class="container">
     <div class="row" style="margin-top: 8%;">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="alert alert-success" style="display: none;" role="alert">
+
+            </div>
+        </div>
         <div class="col-md-offset-2 col-md-6 chatbox">
             <div class="user-list" data-user-list-length="${fn:length(userList)}">
                 <c:forEach items="${userList}" var="user">
@@ -46,8 +51,6 @@
                 <button type="button" class="btn btn-primary" id="find-user">查找</button>
                 <div id="find-result-list">
                     <ul>
-                        <li><span>搜索结果</span></li>
-
                     </ul>
                 </div>
                 <nav>
@@ -60,14 +63,7 @@
             <div id="system-message" style="display: none;">
                 <div>
                     <ul>
-                        <li data-request-user-id="11"><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
-                        <li><span>test2请求添加您为好友</span><br><button class="btn btn-primary">接受</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">拒绝</button></li>
+
                     </ul>
                 </div>
                 <nav>

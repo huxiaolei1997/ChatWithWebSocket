@@ -152,89 +152,19 @@ public class UserController {
     @RequestMapping(value = "processUserRequest", method = RequestMethod.POST)
     public @ResponseBody Result<Friend> processUserRequest(@RequestBody Friend friend) {
         userService.processUserRequest(friend);
-        return ResultUtil.success(0, "处理成功");
+        User user = userService.getUserInfo(friend.getA_id());
+        if (friend.getStatus() == Constant.ACCESS) {
+            return ResultUtil.success(0, "您接受了<b>" + user.getUserName() + "</b>的申请");
+        } else if (friend.getStatus() == Constant.DENY) {
+            return ResultUtil.success(0, "您拒绝了<b>" + user.getUserName() + "</b>的申请");
+        }
+        return null;
     }
 
     // 获取验证消息处理结果
     @RequestMapping(value = "getVerificationResult", method = RequestMethod.GET)
     public @ResponseBody List<MessageProcessResult<User>> getVerificationResult(HttpSession session) {
-        // 获取当前登录的用户id
-        int user_id = (int) session.getAttribute("user_id");
-        // 获取和当前用户有关的验证消息
-        logger.info("获取和" + user_id + "有关的好友请求");
-        List<Friend> friendList = userService.getUserRequestByUserId(user_id);
-        logger.info("和" + user_id + "有关的好友请求是：" + friendList.toString());
-        String processResult = "";
-        List<MessageProcessResult<User>> messageProcessResultList = new ArrayList<>();
-        MessageProcessResult<User> messageProcessResult;
-        User fromUser;
-        User toUser;
-        int index = 0;
-        for (Friend friend : friendList) {
-            messageProcessResult = new MessageProcessResult<>();
-            logger.info("这是第" + index + "循环");
-            fromUser = userService.getUserInfo(friend.getA_id());
-            toUser = userService.getUserInfo(friend.getB_id());
-            //logger.info("fromUs");
-            logger.info("fromUser:" + fromUser.toString() + ", getA_id() = " + friend.getA_id() + ", toUser" + toUser.toString() + ", getB_id() = " + friend.getB_id());
-            // 自己添加好友
-            if (friend.getA_id() == user_id) {
-                logger.info("自己添加好友，添加的好友id是 " + friend.getB_id());
-                if (friend.getStatus() == Constant.ACCESS) {
-                    processResult = toUser.getUserName() + "接受了您的好友请求";
-                } else {
-                    processResult = toUser.getUserName() + "拒绝了您的好友请求";
-                }
-                logger.info("processResult: " + processResult);
-            } else if (friend.getA_id() != user_id) {
-                logger.info("别人添加自己为好友，别人的id是 " + friend.getA_id());
-                //
-                if (friend.getStatus() == Constant.ACCESS) {
-                    processResult = "您接受了" + fromUser.getUserName() + "的好友请求";
-                } else if (friend.getStatus() == Constant.DENY) {
-                    processResult = "您拒绝了" + fromUser.getUserName() + "的好友请求";
-                }
-                logger.info("processResult: " + processResult);
-            }
-            messageProcessResult.setData1(fromUser);
-            messageProcessResult.setData2(toUser);
-            messageProcessResult.setProcess_result(processResult);
-            messageProcessResult.setStatus(friend.getStatus());
-            logger.info("messageProcessResult.getData1(): " + messageProcessResult.getData1().toString() + ", messageProcessResult.getData2()" + messageProcessResult.getData2().toString());
-            logger.info("messageProcessResult.getProcess_result():" + messageProcessResult.getProcess_result());
-            messageProcessResultList.add(messageProcessResult);
-            logger.info("messageProcessResult" + messageProcessResult.toString() + ", " + messageProcessResultList.toString());
-            index++;
-        }
-        logger.info("验证消息的处理结果是：" + messageProcessResultList.toString());
+        List<MessageProcessResult<User>> messageProcessResultList = userService.getUserRequestByUserId(session);
         return messageProcessResultList;
     }
-
-//    public static void main(String[] args) {
-//        List<Friend> friendList = null;
-//        friendList = new ArrayList<>();
-//
-//        Friend friend;
-//        friend = new Friend();
-//        friend.setA_id(105);
-//        friend.setB_id(106);
-//        friend.setStatus(0);
-//        friendList.add(friend);
-//        System.out.println(friendList.toString());
-//
-//        friend = new Friend();
-//        friend.setA_id(105);
-//        friend.setB_id(7);
-//        friend.setStatus(0);
-//        friendList.add(friend);
-//        System.out.println(friendList.toString());
-//
-//        friend = new Friend();
-//        friend.setA_id(107);
-//        friend.setB_id(105);
-//        friend.setStatus(0);
-//        friendList.add(friend);
-//        System.out.println(friendList.toString());
-//        //System.out.println(friendList.toString());
-//    }
 }

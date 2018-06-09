@@ -3,6 +3,7 @@ package com.chat.serviceImpl;
 import com.chat.mapper.UserMapper;
 import com.chat.model.Friend;
 import com.chat.model.Message;
+import com.chat.model.MessageProcessResult;
 import com.chat.model.User;
 import com.chat.service.UserService;
 import com.chat.tools.Constant;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -129,15 +132,67 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据 user_id 获取和当前用户有关的好友验证请求
+     * 获取和当前用户有关的好友验证请求及处理结果
      *
-     * @param user_id
+     * @param session
      * @return
      */
     @Override
-    public List<Friend> getUserRequestByUserId(int user_id) {
+    public List<MessageProcessResult<User>> getUserRequestByUserId(HttpSession session) {
+        // 获取当前登录的用户id
+        int user_id = (int) session.getAttribute("user_id");
+        // 获取和当前用户有关的验证消息
+        logger.info("获取和" + user_id + "有关的好友请求");
         List<Friend> friendList = userMapper.getUserRequestByUserId(user_id);
-        return friendList;
+        logger.info("和" + user_id + "有关的好友请求是：" + friendList.toString());
+        String processResult = "";
+        List<MessageProcessResult<User>> messageProcessResultList = new ArrayList<>();
+        MessageProcessResult<User> messageProcessResult;
+        User fromUser;
+        User toUser;
+        //int index = 0;
+        for (Friend friend : friendList) {
+            messageProcessResult = new MessageProcessResult<>();
+            //logger.info("这是第" + index + "循环");
+            fromUser = userMapper.getUserInfo(friend.getA_id());
+            toUser = userMapper.getUserInfo(friend.getB_id());
+            //logger.info("fromUs");
+            logger.info("fromUser:" + fromUser.toString() + ", getA_id() = " + friend.getA_id() + ", toUser" + toUser.toString() + ", getB_id() = " + friend.getB_id());
+            // 自己添加好友
+            if (friend.getA_id() == user_id) {
+                logger.info("自己添加好友，添加的好友id是 " + friend.getB_id());
+                if (friend.getStatus() == Constant.ACCESS) {
+                    processResult = "<b>" + toUser.getUserName() + "</b>接受了您的好友请求";
+                } else if (friend.getStatus() == Constant.DENY) {
+                    processResult = "<b>" + toUser.getUserName() + "</b>拒绝了您的好友请求";
+                } else if (friend.getStatus() == Constant.UNPROCESSED) {
+                    processResult = "您请求添加<b>" + toUser.getUserName() + "</b>为好友，正在等待对方处理";
+                }
+                logger.info("processResult: " + processResult);
+            } else if (friend.getA_id() != user_id) {
+                logger.info("别人添加自己为好友，别人的id是 " + friend.getA_id());
+                //
+                if (friend.getStatus() == Constant.ACCESS) {
+                    processResult = "您接受了<b>" + fromUser.getUserName() + "</b>的好友请求";
+                } else if (friend.getStatus() == Constant.DENY) {
+                    processResult = "您拒绝了<b>" + fromUser.getUserName() + "</b>的好友请求";
+                } else if (friend.getStatus() == Constant.UNPROCESSED) {
+                    processResult = "<b>" + fromUser.getUserName() + "</b>请求添加您为好友";
+                }
+                logger.info("processResult: " + processResult);
+            }
+            messageProcessResult.setData1(fromUser);
+            messageProcessResult.setData2(toUser);
+            messageProcessResult.setProcess_result(processResult);
+            messageProcessResult.setStatus(friend.getStatus());
+            logger.info("messageProcessResult.getData1(): " + messageProcessResult.getData1().toString() + ", messageProcessResult.getData2()" + messageProcessResult.getData2().toString());
+            logger.info("messageProcessResult.getProcess_result():" + messageProcessResult.getProcess_result());
+            messageProcessResultList.add(messageProcessResult);
+            logger.info("messageProcessResult" + messageProcessResult.toString() + ", " + messageProcessResultList.toString());
+            //index++;
+        }
+        logger.info("验证消息的处理结果是：" + messageProcessResultList.toString());
+        return messageProcessResultList;
     }
 
 }
