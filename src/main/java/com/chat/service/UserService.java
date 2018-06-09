@@ -53,11 +53,14 @@ public interface UserService {
     void saveRegisterUser(User user);
 
     /**
-     * 根据用户名查找用户（不显示自己）
+     * 根据用户名，页号，页面大小查找用户，分页显示（不显示自己和自己的好友）
+     * @param current_page
+     * @param page_size
      * @param userName
+     * @param user_id
      * @return
      */
-    List<User> findUserByUserName(String userName, int user_id);
+    Pager<User> findUserByUserName(int current_page, int page_size, String userName, int user_id);
 
     /**
      * 保存好友请求到数据库中

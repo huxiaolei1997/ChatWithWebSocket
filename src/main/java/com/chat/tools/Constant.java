@@ -17,6 +17,9 @@ import javax.imageio.ImageIO;
  **/
 public class Constant {
 
+    // 默认分页大小
+    public final static int PAGE_SIZE = 10;
+
     // 表示普通消息
     public final static int NORMAL_MESSAGE = 0;
 

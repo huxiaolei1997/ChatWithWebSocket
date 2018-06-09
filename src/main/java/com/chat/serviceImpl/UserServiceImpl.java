@@ -1,10 +1,7 @@
 package com.chat.serviceImpl;
 
 import com.chat.mapper.UserMapper;
-import com.chat.model.Friend;
-import com.chat.model.Message;
-import com.chat.model.MessageProcessResult;
-import com.chat.model.User;
+import com.chat.model.*;
 import com.chat.service.UserService;
 import com.chat.tools.Constant;
 import org.apache.log4j.Logger;
@@ -101,15 +98,60 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据用户名查找用户
+     * 根据用户名，页号，页面大小查找用户，分页显示（不显示自己和自己的好友）
      *
+     * @param current_page
+     * @param page_size
      * @param userName
+     * @param user_id
      * @return
      */
     @Override
-    public List<User> findUserByUserName(String userName, int user_id) {
-        return userMapper.findUserByUserName(userName, user_id);
+    public Pager<User> findUserByUserName(int current_page, int page_size, String userName, int user_id) {
+        // 如果请求的页号小于 1 ，那么重新 curreng_page 重新赋值为 1
+        int __current_page = current_page;
+        if (current_page < 1) {
+            __current_page = 1;
+        }
+        // 计算行数起始位置
+        int start_page = page_size * (__current_page - 1) + 1;
+        // 行结束位置
+        int end_page = start_page + page_size - 1;
+        // 获取总记录数
+        int total_record = userMapper.countFindUserByUserName(user_id, userName, Constant.ACCESS);
+        // 计算总共页数
+        int total_page = total_record / page_size + 1;
+
+        if (total_record % page_size == 0 && total_record != 0) {
+            total_page = total_record / page_size;
+        }
+
+        // 如果总记录数为0，则总页数设置为 1
+        if (total_record == 0) {
+            total_page = 1;
+        }
+
+        // 如果请求的页号大于总页号，那么返回的数据是最后一页的数据
+        if (current_page > total_page) {
+            __current_page = total_page;
+        }
+
+        List<User> userList = userMapper.findUserByUserName(start_page, end_page, user_id, userName, Constant.ACCESS);
+        Pager<User> userPager = new Pager<>(__current_page, total_record, total_page, page_size, userList);
+
+        return userPager;
     }
+
+//    /**
+//     * 根据用户名查找用户
+//     *
+//     * @param userName
+//     * @return
+//     */
+//    @Override
+//    public List<User> findUserByUserName(String userName, int user_id) {
+//        return userMapper.findUserByUserName(userName, user_id);
+//    }
 
     /**
      * 保存好友请求到数据库中
@@ -152,7 +194,6 @@ public class UserServiceImpl implements UserService {
         User toUser;
         //int index = 0;
         for (Friend friend : friendList) {
-            messageProcessResult = new MessageProcessResult<>();
             //logger.info("这是第" + index + "循环");
             fromUser = userMapper.getUserInfo(friend.getA_id());
             toUser = userMapper.getUserInfo(friend.getB_id());
@@ -181,15 +222,9 @@ public class UserServiceImpl implements UserService {
                 }
                 logger.info("processResult: " + processResult);
             }
-            messageProcessResult.setData1(fromUser);
-            messageProcessResult.setData2(toUser);
-            messageProcessResult.setProcess_result(processResult);
-            messageProcessResult.setStatus(friend.getStatus());
-            logger.info("messageProcessResult.getData1(): " + messageProcessResult.getData1().toString() + ", messageProcessResult.getData2()" + messageProcessResult.getData2().toString());
-            logger.info("messageProcessResult.getProcess_result():" + messageProcessResult.getProcess_result());
+            messageProcessResult = new MessageProcessResult<>(fromUser, toUser, friend.getStatus(), processResult);
             messageProcessResultList.add(messageProcessResult);
             logger.info("messageProcessResult" + messageProcessResult.toString() + ", " + messageProcessResultList.toString());
-            //index++;
         }
         logger.info("验证消息的处理结果是：" + messageProcessResultList.toString());
         return messageProcessResultList;

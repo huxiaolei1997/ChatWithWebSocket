@@ -109,24 +109,67 @@ public interface UserMapper {
     @Insert("insert into user_info(user_name, password) values(#{user.userName}, #{user.password})")
     void saveRegisterUser(@Param("user") User user);
 
+
     /**
-     * 根据用户名查找用户（不显示自己）
+     * 根据用户名查找用户（不显示自己和自己的好友）
+     * @param start_page 起始行数
+     * @param end_page 结束行数
+     * @param user_id 当前登录用户id
+     * @param userName 要查找的用户名
+     * @param status 好友请求的状态，这里只查找 status = 0 的，也就是当前用户的好友
+     * @return 返回的是一个list，不包括自己和自己的好友
+     */
+    @Transactional(readOnly = true)
+//    @Select("select " +
+//            "id, " +
+//            "user_name as userName " +
+//            "from " +
+//            "user_info " +
+//            "where " +
+//            "user_name " +
+//            "like " +
+//            "concat(concat('%', #{userName}), '%') " +
+//            "and " +
+//            "id != #{user_id}")
+    @Select("select  a2.id, a2.userName, a2.add_time " +
+            "from  " +
+            "( " +
+            "select a1.id, a1.userName, a1.add_time, rownum rn  " +
+            "from  " +
+            "( " +
+            "select id, user_name as userName, add_time from user_info where user_name like concat('%', concat(#{keyword}, '%')) and id != #{user_id} " +
+            "minus  " +
+            "select id, user_name as userName, add_time from " +
+            "user_info where id in (select b_id from friends where a_id = #{user_id} and status = #{status}  " +
+            "union  " +
+            "select a_id from friends where b_id = #{user_id}) " +
+            ") a1  " +
+            "where rownum <= #{end_page}  " +
+            ") a2  " +
+            "where  " +
+            "a2.rn >= #{start_page}")
+    List<User> findUserByUserName(@Param("start_page") int start_page, @Param("end_page") int end_page, @Param("user_id") int user_id, @Param("keyword") String userName, @Param("status") int status);
+    //List<User> findUserByUserName(@Param("userName") String userName, @Param("user_id") int user_id);
+
+    /**
+     * 统计根据用户名查找用户（不显示自己和自己的好友）返回的结果总数
+     * @param user_id
      * @param userName
+     * @param status
      * @return
      */
     @Transactional(readOnly = true)
-    @Select("select " +
-            "id, " +
-            "user_name as userName " +
-            "from " +
-            "user_info " +
-            "where " +
-            "user_name " +
-            "like " +
-            "concat(concat('%', #{userName}), '%') " +
-            "and " +
-            "id != #{user_id}")
-    List<User> findUserByUserName(@Param("userName") String userName, @Param("user_id") int user_id);
+    @Select("select count(id)   " +
+            "from   " +
+            "(  " +
+            "select id, user_name as userName, add_time from user_info where user_name like concat('%', concat(#{keyword}, '%')) and id != #{user_id}  " +
+            "minus   " +
+            "select id, user_name as userName, add_time from  " +
+            "user_info where id in (select b_id from friends where a_id = #{user_id} and status = #{status}   " +
+            "union   " +
+            "select a_id from friends where b_id = #{user_id})  " +
+            ")")
+    int countFindUserByUserName(@Param("user_id") int user_id, @Param("keyword") String userName, @Param("status") int status);
 
     /**
      * 添加好友请求到数据库中

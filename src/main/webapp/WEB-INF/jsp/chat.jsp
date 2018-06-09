@@ -54,9 +54,9 @@
                     </ul>
                 </div>
                 <nav>
-                    <ul class="pager">
-                        <li><a href="#" class="prev">上一页</a></li>
-                        <li><a href="#" class="next">下一页</a></li>
+                    <ul class="add-friend-pager pager" style="display: none;" data-current-page="1" data-total-page="1">
+                        <li><a href="javascript:;" class="prev">上一页</a></li>
+                        <li><a href="javascript:;" class="next">下一页</a></li>
                     </ul>
                 </nav>
             </div>

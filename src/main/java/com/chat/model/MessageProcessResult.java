@@ -1,14 +1,30 @@
 package com.chat.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author xiaolei hu
  * @date 2018/6/8 20:47
  **/
 public class MessageProcessResult<T> {
     private T data1;
+
     private T data2;
+
     private int status;
+
     private String process_result;
+
+    public MessageProcessResult() {
+
+    }
+
+    public MessageProcessResult(T data1, T data2, int status, String process_result) {
+        this.data1 = data1;
+        this.data2 = data2;
+        this.status = status;
+        this.process_result = process_result;
+    }
 
     public String getProcess_result() {
         return process_result;

@@ -39,12 +39,16 @@ public class UserController {
 
     // 根据用户名查找用户
     @RequestMapping(value = "/findUserByUserName", method = RequestMethod.POST)
-    public @ResponseBody List<User> findUserByUserName(HttpSession session, @RequestParam("userName") String userName) {
+    public @ResponseBody Pager<User> findUserByUserName(HttpSession session,@RequestParam("current_page") Integer current_page, @RequestParam("page_size") Integer page_size, @RequestParam("userName") String userName) {
         logger.info("根据用户名查找用户，" + userName);
         int user_id = (int) session.getAttribute("user_id");
-        List<User> userList = userService.findUserByUserName(userName, user_id);
-        logger.info("根据用户名查找用户：" + userList.toString());
-        return userList;
+        logger.info("current_page = " + current_page + ", page_size = " + page_size);
+        // 默认分页大小
+        //int page_size = Constant.PAGE_SIZE;
+        Pager<User> userPager = userService.findUserByUserName(current_page, page_size, userName, user_id);
+        logger.info("根据用户名查找用户：" + userPager.toString());
+        //return userList;
+        return userPager;
     }
 
     // 发送好友请求
