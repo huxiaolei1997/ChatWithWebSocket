@@ -7,6 +7,14 @@ import com.chat.model.Result;
  * @date 2018/6/4 20:51
  **/
 public class ResultUtil {
+    public static Result success(Object object, String msg) {
+        Result result = new Result();
+        result.setCode(0);
+        result.setMsg(msg);
+        result.setData(object);
+        return result;
+    }
+
     public static Result success(Object object) {
         Result result = new Result();
         result.setCode(0);

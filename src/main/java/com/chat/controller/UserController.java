@@ -33,77 +33,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private ToolsService toolsService;
-
     // websocket消息处理类
     @Autowired
     private MyWebSocketHandler myWebSocketHandler;
-
-    // 检查验证码是否正确
-    @RequestMapping(value = "/checkCaptcha", method = RequestMethod.POST)
-    public @ResponseBody Result checkCaptcha(HttpSession session, @RequestParam("captcha_client") String captcha_client) {
-        String captcha_server = (String) session.getAttribute("captcha");
-        logger.info("开始检查验证码是否正确，captcha_client = " + captcha_client + ", captcha_server = " + captcha_server);
-        if (captcha_client != null && captcha_client.equalsIgnoreCase(captcha_server)) {
-            logger.info("验证码校验正确");
-            return ResultUtil.success(0, "验证码校验正确");
-        } else {
-            return ResultUtil.error(1, "验证码校验失败");
-        }
-    }
-
-    // 检查用户的用户名密码是否正确
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody Result<User> login(HttpSession session, @RequestBody User user) {
-        logger.info("user:" + user.toString());
-        User user2 = userService.getUserByUserNameAndPassword(user);
-        System.out.println("LoginController : 当前请求登录的用户名是：" + user.getUserName());
-        if (user2 != null) {
-            logger.info("当前请求登录的用户名是：" + user2.getUserName());
-            session.setAttribute("user_id", user2.getId());
-            return ResultUtil.success(user2);
-        } else {
-            return ResultUtil.error(1, "用户名不存在或密码错误");
-        }
-    }
-
-    // 登录页面
-    @RequestMapping(value = "/Login", method = RequestMethod.GET)
-    public String loingModel() {
-        return "login";
-    }
-
-    // 用户注册界面
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String register() {
-        return "register";
-    }
-
-    // 保存注册的用户到数据库中
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public @ResponseBody Result saveRegisterUser(@RequestBody User user) {
-        logger.info("调用注册用户的方法，" + user.toString());
-        userService.saveRegisterUser(user);
-        logger.info("用户信息成功保存到数据库中");
-        return ResultUtil.success(0, "用户注册成功");
-    }
-
-    // 检查用户名是否存在
-    @RequestMapping(value = "/checkUserNameIfExist", method = RequestMethod.POST)
-    public @ResponseBody Result checkUserNameIfExist(@RequestParam("userName") String userName) {
-        logger.info("检查 " + userName + " 是否存在");
-        long if_user_name_exist = userService.checkUserNameIfExist(userName);
-        if (if_user_name_exist == 1) {
-            //Result result = new Result();
-            logger.info(userName + " 已经被占用");
-            return ResultUtil.error(1, "该用户名已经被占用");
-        } else if (if_user_name_exist == 0) {
-            logger.info(userName + " 可用");
-            return ResultUtil.error(0, "该用户名可用");
-        }
-        return null;
-    }
 
     // 根据用户名查找用户
     @RequestMapping(value = "/findUserByUserName", method = RequestMethod.POST)
@@ -142,21 +74,15 @@ public class UserController {
 
     }
 
-    // 生成验证码
-    @RequestMapping(value = "/captcha", method = RequestMethod.GET)
-    public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        toolsService.makeCaptcha(request, response);
-    }
-
     // 处理好友请求
     @RequestMapping(value = "processUserRequest", method = RequestMethod.POST)
     public @ResponseBody Result<Friend> processUserRequest(@RequestBody Friend friend) {
         userService.processUserRequest(friend);
         User user = userService.getUserInfo(friend.getA_id());
         if (friend.getStatus() == Constant.ACCESS) {
-            return ResultUtil.success(0, "您接受了<b>" + user.getUserName() + "</b>的申请");
+            return ResultUtil.success(friend, "您接受了<b>" + user.getUserName() + "</b>的申请");
         } else if (friend.getStatus() == Constant.DENY) {
-            return ResultUtil.success(0, "您拒绝了<b>" + user.getUserName() + "</b>的申请");
+            return ResultUtil.success(friend, "您拒绝了<b>" + user.getUserName() + "</b>的申请");
         }
         return null;
     }
@@ -166,5 +92,16 @@ public class UserController {
     public @ResponseBody List<MessageProcessResult<User>> getVerificationResult(HttpSession session) {
         List<MessageProcessResult<User>> messageProcessResultList = userService.getUserRequestByUserId(session);
         return messageProcessResultList;
+    }
+
+    // 获取当前用户的好友列表
+    @RequestMapping(value = "getUserFriendList", method = RequestMethod.GET)
+    public @ResponseBody List<User> getUserFriend(HttpSession session) {
+        // 获取当前登录的用户的id
+        logger.info("获取当前登录的用户的id");
+        int user_id = (int) session.getAttribute("user_id");
+        logger.info("获取当前登录的用户的好友列表");
+        List<User> userList = userService.getUserAllFriends(user_id);
+        return userList;
     }
 }

@@ -82,6 +82,8 @@
 #system-message div ul li {
     list-style: none;
     width: 198px;
+    height: auto;
+    line-height: 30px;
     display: inline-block;
     border-bottom: 1px solid #3BABFF;
     margin-left: -40px;

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 public class AuthorityAspect {
     private final static Logger logger = Logger.getLogger(AuthorityAspect.class);
 
-    @Pointcut(value = "execution(* com.chat.controller.ChatController.*(..))")
+    @Pointcut(value = "execution(* com.chat.controller.ChatController.*(..)) || execution(* com.chat.controller.MessageController.*(..)) || execution(* com.chat.controller.UserController.*(..))")
     public void checkUserIfLogin() {
         //System.out.println("切面类");
     }

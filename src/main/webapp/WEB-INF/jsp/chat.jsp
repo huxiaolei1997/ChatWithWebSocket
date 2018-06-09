@@ -18,7 +18,7 @@
 </head>
 <body style="background-color:white;">
 <div class="container">
-    <div class="row" style="margin-top: 8%;">
+    <div class="row" style="margin-top: 5%;">
         <div class="col-md-offset-2 col-md-8">
             <div class="alert alert-success" style="display: none;" role="alert">
 

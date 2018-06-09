@@ -1,4 +1,90 @@
 $(function() {
+    // 获取和指定好友的聊天记录
+    var getChatRecord = function(to_user_id) {
+        // 获取当前登录的用户的用户id
+        var login_user_id = $(".chat").attr("data-user-id");
+        console.log("to_user_id = " + to_user_id);
+        // 设置将要聊天的用户的user_id
+        $("#sendMessage").attr("data-to-user-id", to_user_id);
+        // 获取和当前用户的聊天记录
+        $.ajax({
+            url : "getMessageRecord",
+            type: "GET",
+            data: {
+                to_user_id : to_user_id
+            },
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+                var dataHtmlRecord = "";
+                for (var i = 0; i < response.length; i++) {
+                    if (response[i].to_user_id == to_user_id) {
+                        console.log("right = " + response[i].to_user_id);
+                        dataHtmlRecord += "<div class=\"receiver\">"
+                            + "<div>" + "<img src=\"static/images/avatar.jpg\">"
+                            + "</div>" + "<div>" + "<div class=\"right_triangle\"></div>"
+                            + "<span>" + response[i].content + "</span>" + "</div>" + "</div>";
+                        //$(".chat").append();
+                    } else if (response[i].to_user_id == login_user_id) {
+                        console.log("left = " + response[i].from_user_id);
+                        dataHtmlRecord += "<div class=\"sender\">" + "<div>"
+                            + "<img src=\"static/images/avatar.jpg\">"
+                            + "</div>" + "<div>" + "<div class=\"left_triangle\"></div>"
+                            + "<span>" + response[i].content + "</span>" + "</div>" + "</div>";
+                        //$(".chat").append();
+                    }
+                }
+                $(".chat").html(dataHtmlRecord);
+                // 滑动滚动条到底部
+                //$(".chat").scrollTop = $(".chat").scrollHeight;
+                var chat = document.getElementsByClassName("chat")[0];
+                chat.scrollTop = chat.scrollHeight;
+            },
+            error:function () {
+
+            }
+        });
+    }
+
+    // 消息提示
+    var msgtips = function(msg) {
+        $(".alert-success").css("display", "block");
+        $(".alert-success").html(msg);
+        setTimeout(function () {
+            $(".alert-success").css("display", "none");
+        }, 1500);
+    }
+
+    // 获取用户好友列表
+    var getUserFriendList = function () {
+        $.ajax({
+            url: "getUserFriendList",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                var dataUserListHtml = "";
+                var dataLength = response.length;
+                for (var i = 0; i < dataLength; i++) {
+                    dataUserListHtml += "<span class=\"user message\" data-user-list-id=\"" + response[i].id + "\">" +
+                        "<img src=\"static/images/avatar.jpg\" alt=\"avatar\" class=\"avatar\">" +
+                        "<span>" + response[i].userName + "</span></span>";
+                }
+                console.log("dataUserListHtml" + dataUserListHtml);
+                $(".user-list").html(dataUserListHtml);
+                // 设置默认发送信息给第一个好友
+                var to_user_id_default = $(".message").eq(0).attr("data-user-list-id");
+                $(".message").eq(0).addClass("user-select");
+                console.log("默认发送消息给第一个好友：" + to_user_id_default);
+                $("#sendMessage").attr("data-to-user-id", to_user_id_default);
+                // 默认获取和第一个好友的聊天记录
+                getChatRecord(to_user_id_default);
+            },
+            error: function() {
+
+            }
+        });
+    }
+
     // 获取好友的数量
     var data_user_list_length = $(".user-list").attr("data-user-list-length");
     console.log(data_user_list_length);
@@ -35,6 +121,29 @@ $(function() {
             var data = JSON.parse(evnt.data);
             // 如果收到的是普通消息
             if (data.message_type == 0) {
+                //if (data.from_user_id)
+                $(".message").each(function () {
+                    var from_user_id = $(this).attr("data-user-list-id");
+                    if ($(this).hasClass("user-select")) {
+                        console.log("移除user-select");
+                        $(this).removeClass("user-select");
+                    }
+                    if (from_user_id == data.from_user_id) {
+                        console.log("index = " + $(this).index());
+                        if ($(this).index() != 0) {
+                            // 消息聊天置顶
+                            var dataHtml = $(this).prop("outerHTML");
+                            $(".user-list").prepend(dataHtml);
+                            $(this).remove();
+                        }
+                        // 获取和当前发来消息的用户的历史聊天记录
+                        getChatRecord(from_user_id);
+                        // 这里的 return false 的作用相当于 break，即退出本次循环
+                        //return false;
+                    }
+                });
+                // 发消息的用户当前为选中状态
+                $(".message").eq(0).addClass("user-select");
                 //$("#msg").append("<p>(<font color='red'>" + evnt.data + "</font>)</p>");
                 $(".chat").append("<div class=\"sender\">" + "<div>"
                     + "<img src=\"static/images/avatar.jpg\">"
@@ -141,64 +250,17 @@ $(function() {
     });
 
     // 点击获取好友的聊天记录
-    $(".message").click(function() {
-       $(".user").each(function() {
-           if ($(this).hasClass("user-select")) {
-               $(this).removeClass("user-select");
-           }
-       });
-       $(this).addClass("user-select");
+    $(".user-list").on("click", ".message", function () {
+        $(".user").each(function() {
+            if ($(this).hasClass("user-select")) {
+                $(this).removeClass("user-select");
+            }
+        });
+        $(this).addClass("user-select");
         // 获取当前和自己聊天的用户id
         var to_user_id = $(this).attr("data-user-list-id");
         getChatRecord(to_user_id);
     });
-
-    // 获取和指定好友的聊天记录
-    function getChatRecord(to_user_id) {
-        // 获取当前登录的用户的用户id
-        var login_user_id = $(".chat").attr("data-user-id");
-        console.log("to_user_id = " + to_user_id);
-        // 设置将要聊天的用户的user_id
-        $("#sendMessage").attr("data-to-user-id", to_user_id);
-        // 获取和当前用户的聊天记录
-        $.ajax({
-            url : "getMessageRecord",
-            type: "GET",
-            data: {
-                to_user_id : to_user_id
-            },
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-                var dataHtmlRecord = "";
-                for (var i = 0; i < response.length; i++) {
-                    if (response[i].to_user_id == to_user_id) {
-                        console.log("right = " + response[i].to_user_id);
-                        dataHtmlRecord += "<div class=\"receiver\">"
-                            + "<div>" + "<img src=\"static/images/avatar.jpg\">"
-                            + "</div>" + "<div>" + "<div class=\"right_triangle\"></div>"
-                            + "<span>" + response[i].content + "</span>" + "</div>" + "</div>";
-                        //$(".chat").append();
-                    } else if (response[i].to_user_id == login_user_id) {
-                        console.log("left = " + response[i].from_user_id);
-                        dataHtmlRecord += "<div class=\"sender\">" + "<div>"
-                            + "<img src=\"static/images/avatar.jpg\">"
-                            + "</div>" + "<div>" + "<div class=\"left_triangle\"></div>"
-                            + "<span>" + response[i].content + "</span>" + "</div>" + "</div>";
-                        //$(".chat").append();
-                    }
-                }
-                $(".chat").html(dataHtmlRecord);
-                // 滑动滚动条到底部
-                //$(".chat").scrollTop = $(".chat").scrollHeight;
-                var chat = document.getElementsByClassName("chat")[0];
-                chat.scrollTop = chat.scrollHeight;
-            },
-            error:function () {
-
-            }
-        });
-    }
 
     // 添加好友面板
     $(".add-friend").click(function() {
@@ -263,21 +325,8 @@ $(function() {
                         msgtips(msg);
                         return false;
                     }
-                    // $.ajax({
-                    //     url: "",
-                    //     type: "POST",
-                    //     data: {
-                    //
-                    //     },
-                    //     dataType: "json",
-                    //     success: function (response) {
-                    //
-                    //     },
-                    //     error: function () {
-                    //
-                    //     }
-                    // });
-                    //发送好友请求
+
+                    // 发送好友请求
                     $.ajax({
                         url: "sendFriendRequest",
                         type: "POST",
@@ -397,6 +446,9 @@ $(function() {
             success: function (response) {
                 $(".system-message").click();
                 msgtips(response.msg);
+                if (response.data.status == 0) {
+                    getUserFriendList();
+                }
                 //alert(response.msg);
             },
             error: function () {
@@ -404,13 +456,5 @@ $(function() {
             }
         });
     });
-
-    var msgtips = function(msg) {
-        $(".alert-success").css("display", "block");
-        $(".alert-success").html(msg);
-        setTimeout(function () {
-            $(".alert-success").css("display", "none");
-        }, 1500);
-    }
 });
 
