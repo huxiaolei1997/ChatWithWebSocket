@@ -114,6 +114,10 @@
     height: 25px;
     font-size: 12px;
 }
+
+.add-friend-pager  {
+    display: none;
+}
 /*#find-result-list ul {*/
     /*float: left;*/
 /*}*/

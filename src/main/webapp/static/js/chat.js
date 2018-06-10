@@ -13,7 +13,7 @@ $(function() {
             success: function (response) {
                 console.log(response);
                 $("#find-result-list ul").html("");
-                $("#find-result-list ul").append("<li><span>搜索结果</span></li>");
+                $("#find-result-list ul").append("<li><span>搜索结果（总共 " + response.total_record + " 条记录）</span></li>");
 
                 if (response.total_page > 1) {
                     $(".add-friend-pager").css("display", "block");
@@ -38,6 +38,7 @@ $(function() {
                 $(".add-friend-pager").attr("data-current-page", response.current_page);
 
                 $(".add-friend-pager").attr("data-total-page", response.total_page);
+                $(".add-friend-pager").eq(1).find("span").eq(1).text(response.total_page);
                 $("#find-result-list ul").append(dataFindResult);
                 // 给动态添加的节点绑定事件
                 $("body").on("click", ".add-friend-request" , function() {
@@ -404,8 +405,8 @@ $(function() {
             success: function (response) {
                 console.log("验证消息处理结果是：" + response);
                 var dataVerification = "";
-                var response_format = FastJson.format(response);
-
+                //var response_format = FastJson.format(response);
+                var response_format = response;
                 for (key in response_format) {
                     console.log("response_format = " + response_format[0].data1);
                     if (response_format[key].status == 2) {
@@ -502,73 +503,26 @@ $(function() {
         // 上一页
         if ($(this).hasClass("prev")) {
             current_page -= 1;
-            if (current_page < 1) {
+            if (current_page <= 1) {
                 current_page = 1;
+                $(".add-friend-pager li .prev").css("display", "none");
             }
+            $(".add-friend-pager").eq(1).find("span").eq(0).text(current_page);
+            $(".add-friend-pager li .next").css("display", "inline-block");
             findUserByUserName(userName, current_page);
             console.log("current_page = " + current_page + ", userName = " + userName);
         } else if ($(this).hasClass("next")) {
             // 下一页
             var total_page = $(this).parent().parent().attr("data-total-page");
             current_page += 1;
-            if (current_page > total_page) {
+            if (current_page >= total_page) {
                 current_page = total_page;
+                $(".add-friend-pager li .next").css("display", "none");
             }
+            $(".add-friend-pager").eq(1).find("span").eq(0).text(current_page);
+            $(".add-friend-pager li .prev").css("display", "inline-block");
             findUserByUserName(userName, current_page);
             console.log("current_page = " + current_page + ", userName = " + userName);
         }
     });
-
-    var FastJson = {
-        isArray : function(a) {
-            return "object" == typeof a
-                && "[object array]" == Object.prototype.toString.call(a)
-                    .toLowerCase();
-        },
-        isObject : function(a) {
-            return "object" == typeof a
-                && "[object object]" == Object.prototype.toString.call(a)
-                    .toLowerCase();
-        },
-        format : function(a) {
-            if (null == a)
-                return null;
-            "string" == typeof a && (a = eval("(" + a + ")"));
-            return this._format(a, a, null, null, null);
-        },
-        _randomId : function() {
-            return "randomId_" + parseInt(1E9 * Math.random());
-        },
-        _getJsonValue : function(a, c) {
-            var d = this._randomId(), b;
-            b = "" + ("function " + d + "(root){") + ("return root." + c + ";");
-            b += "}";
-            b += "";
-            var e = document.createElement("script");
-            e.id = d;
-            e.text = b;
-            document.body.appendChild(e);
-            d = window[d](a);
-            e.parentNode.removeChild(e);
-            return d;
-        },
-        _format : function(a, c, d, b, e) {
-            d || (d = "");
-            if (this.isObject(c)) {
-                if (c.$ref) {
-                    var g = c.$ref;
-                    0 == g.indexOf("$.")
-                    && (b[e] = this._getJsonValue(a, g.substring(2)));
-                    return
-                }
-                for ( var f in c)
-                    b = d, "" != b && (b += "."), g = c[f], b += f, this
-                        ._format(a, g, b, c, f);
-            } else if (this.isArray(c))
-                for (f in c)
-                    b = d, g = c[f], b = b + "[" + f + "]", this._format(a, g,
-                        b, c, f);
-            return a;
-        }
-    };
 });

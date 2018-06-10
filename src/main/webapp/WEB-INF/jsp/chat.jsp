@@ -36,7 +36,7 @@
                 <!-- 存放聊天内容 -->
             </div>
             <div class="input-text">
-                <textarea id="content" style="width: 446px; height: 150px;" class="form-control"></textarea>
+                <textarea id="content" style="width: 446px; height: 150px;" class="form-control" placeholder="请在此处输入消息内容……"></textarea>
                 <button type="button" id="loginOut" class="btn btn-primary">退出登录</button>
                 <button type="button" id="sendMessage" style="float: right;margin-top: 3px;" class="btn btn-primary" data-to-user-id="">发送</button>
             </div>
@@ -54,9 +54,12 @@
                     </ul>
                 </div>
                 <nav>
-                    <ul class="add-friend-pager pager" style="display: none;" data-current-page="1" data-total-page="1">
-                        <li><a href="javascript:;" class="prev">上一页</a></li>
+                    <ul class="add-friend-pager pager" data-current-page="1" data-total-page="1">
+                        <li><a href="javascript:;" class="prev" style="display: none;">上一页</a></li>
                         <li><a href="javascript:;" class="next">下一页</a></li>
+                    </ul>
+                    <ul class="add-friend-pager pager" style="margin-top: -10px;">
+                        <li>第<span>1</span>/<span>3</span>页</li>
                     </ul>
                 </nav>
             </div>
@@ -66,12 +69,12 @@
 
                     </ul>
                 </div>
-                <nav>
-                    <ul class="pager">
-                        <li><a href="#" class="prev">上一页</a></li>
-                        <li><a href="#" class="next">下一页</a></li>
-                    </ul>
-                </nav>
+                <%--<nav>--%>
+                    <%--<ul class="pager">--%>
+                        <%--<li><a href="#" class="prev">上一页</a></li>--%>
+                        <%--<li><a href="#" class="next">下一页</a></li>--%>
+                    <%--</ul>--%>
+                <%--</nav>--%>
             </div>
         </div>
     </div>
