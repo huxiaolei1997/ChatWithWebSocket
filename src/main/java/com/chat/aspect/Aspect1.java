@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
+ * 测试类
  * @author xiaolei hu
  * @date 2018/6/7 15:52
  **/

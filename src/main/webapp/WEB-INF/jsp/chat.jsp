@@ -12,7 +12,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>${user.userName}</title>
+    <title>当前在线用户是：${user.userName}</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/chat.css" rel="stylesheet" type="text/css">
 </head>

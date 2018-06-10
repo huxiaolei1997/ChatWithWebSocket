@@ -1,7 +1,5 @@
 package com.chat.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 /**
  * @author xiaolei hu
  * @date 2018/6/8 20:47
