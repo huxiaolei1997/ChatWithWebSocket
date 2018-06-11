@@ -136,12 +136,44 @@ public interface UserMapper {
             "select a1.id, a1.userName, a1.add_time, rownum rn  " +
             "from  " +
             "( " +
-            "select id, user_name as userName, add_time from user_info where user_name like concat('%', concat(#{keyword}, '%')) and id != #{user_id} " +
+            "select " +
+            "id, " +
+            "user_name as userName, " +
+            "add_time " +
+            "from " +
+            "user_info " +
+            "where " +
+            "user_name " +
+            "like " +
+            "concat('%', concat(#{keyword}, '%')) " +
+            "and " +
+            "id != #{user_id} " +
             "minus  " +
-            "select id, user_name as userName, add_time from " +
-            "user_info where id in (select b_id from friends where a_id = #{user_id} and status = #{status}  " +
+            "select " +
+            "id, " +
+            "user_name as userName, " +
+            "add_time " +
+            "from " +
+            "user_info " +
+            "where " +
+            "id " +
+            "in " +
+            "(" +
+            "select " +
+            "b_id " +
+            "from " +
+            "friends " +
+            "where " +
+            "a_id = #{user_id} " +
+            "and " +
+            "status = #{status}  " +
             "union  " +
-            "select a_id from friends where b_id = #{user_id}) " +
+            "select " +
+            "a_id " +
+            "from " +
+            "friends " +
+            "where " +
+            "b_id = #{user_id}) " +
             ") a1  " +
             "where rownum <= #{end_page}  " +
             ") a2  " +
@@ -161,12 +193,44 @@ public interface UserMapper {
     @Select("select count(id)   " +
             "from   " +
             "(  " +
-            "select id, user_name as userName, add_time from user_info where user_name like concat('%', concat(#{keyword}, '%')) and id != #{user_id}  " +
+            "select " +
+            "id, " +
+            "user_name as userName, " +
+            "add_time " +
+            "from " +
+            "user_info " +
+            "where " +
+            "user_name " +
+            "like " +
+            "concat('%', concat(#{keyword}, '%')) " +
+            "and " +
+            "id != #{user_id}  " +
             "minus   " +
-            "select id, user_name as userName, add_time from  " +
-            "user_info where id in (select b_id from friends where a_id = #{user_id} and status = #{status}   " +
+            "select " +
+            "id, " +
+            "user_name as userName, " +
+            "add_time " +
+            "from  " +
+            "user_info " +
+            "where " +
+            "id " +
+            "in " +
+            "(" +
+            "select " +
+            "b_id " +
+            "from " +
+            "friends " +
+            "where " +
+            "a_id = #{user_id} " +
+            "and " +
+            "status = #{status}   " +
             "union   " +
-            "select a_id from friends where b_id = #{user_id})  " +
+            "select " +
+            "a_id " +
+            "from " +
+            "friends " +
+            "where " +
+            "b_id = #{user_id})  " +
             ")")
     int countFindUserByUserName(@Param("user_id") int user_id, @Param("keyword") String userName, @Param("status") int status);
 
