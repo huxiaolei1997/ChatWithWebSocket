@@ -61,13 +61,30 @@ public class LoginController {
 
     // 登录页面
     @RequestMapping(value = "/Login", method = RequestMethod.GET)
-    public String loingModel() {
+    public String loingModel(HttpSession session) {
+        Object user_id = session.getAttribute("user_id");
+        if (user_id != null) {
+            return "redirect:chat";
+        }
         return "login";
+    }
+
+    // 退出登录
+    @RequestMapping(value = "loginOut", method = RequestMethod.GET)
+    public @ResponseBody Result loginOut(HttpSession session) {
+        int user_id = (int) session.getAttribute("user_id");
+        logger.info("用户 " + user_id + " 退出登录");
+        session.removeAttribute("user_id");
+        return ResultUtil.success(0, "退出登录成功");
     }
 
     // 用户注册界面
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String register() {
+    public String register(HttpSession session) {
+        Object user_id = session.getAttribute("user_id");
+        if (user_id != null) {
+            return "redirect:chat";
+        }
         return "register";
     }
 

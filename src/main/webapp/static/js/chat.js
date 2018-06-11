@@ -344,10 +344,28 @@ $(function() {
     // 退出登录
     $("#loginOut").click(function() {
         //websocket.close
+        // 关闭websocket连接
         if (!websocket.closed) {
             websocket.close();
         }
-        location.href = "Login";
+        $.ajax({
+            url: "loginOut",
+            type: "GET",
+            dataType: "json",
+            success:function(response) {
+                if (response.code == 0) {
+                    location.href = "Login";
+                } else {
+                    var msg = "退出登录失败";
+                    msgtips(msg);
+                    //return false;
+                }
+            },
+            error: function() {
+
+            }
+        });
+
     });
 
     // 点击获取好友的聊天记录
