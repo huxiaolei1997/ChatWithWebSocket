@@ -6,6 +6,7 @@
 		<!-- 这个配置使全局的映射器启用或禁用缓存  -->
 		<settings>
 			<setting name="cacheEnabled" value="true"/>
+			<!-- mybatis设置在控制台输出 sql 语句，如果配置这句话了却没有打印出 sql 语句，那么把level设置为debug模式-->
 			<setting name="logImpl" value="STDOUT_LOGGING"/>
 		</settings>
 		
