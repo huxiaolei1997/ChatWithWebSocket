@@ -149,6 +149,9 @@
         <div class="col-md-offset-3 col-md-6">
             <form class="form-horizontal">
                 <span class="heading">用户登录</span>
+                <span>测试账户1：<b>test9</b>，密码：<b>test</b></span></br>
+                <span>测试账户2：<b>test</b>，密码：<b>test</b></span></br>
+                <span>可以用这个账号测试相互发送消息</span>
                 <div class="form-group">
                     <input type="text" class="form-control" id="userName" placeholder="用户名" maxlength="20">
                     <i class="fa fa-user"></i>
