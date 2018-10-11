@@ -1,6 +1,6 @@
-$(function() {
+$(function () {
 
-    var findUserByUserName = function(userName, current_page) {
+    var findUserByUserName = function (userName, current_page) {
         $.ajax({
             url: "findUserByUserName",
             type: "POST",
@@ -41,7 +41,7 @@ $(function() {
                 $(".add-friend-pager").eq(1).find("span").eq(1).text(response.total_page);
                 $("#find-result-list ul").append(dataFindResult);
                 // 给动态添加的节点绑定事件
-                $("body").on("click", ".add-friend-request" , function() {
+                $("body").on("click", ".add-friend-request", function () {
                     // 获取当前点击button相对于同类元素的位置
                     var index = $(this).parent().index();
                     console.log("当前点击的是第" + index + "个li");
@@ -85,20 +85,20 @@ $(function() {
                             //var msg = "获取不到b_id的值";
                             msgtips(response.msg);
                         },
-                        error: function() {
+                        error: function () {
 
                         }
                     });
                 });
             },
-            error: function() {
+            error: function () {
 
             }
         });
     }
 
     // 获取和指定好友的聊天记录
-    var getChatRecord = function(to_user_id) {
+    var getChatRecord = function (to_user_id) {
         // 获取当前登录的用户的用户id
         var login_user_id = $(".chat").attr("data-user-id");
         console.log("to_user_id = " + to_user_id);
@@ -106,13 +106,16 @@ $(function() {
         $("#sendMessage").attr("data-to-user-id", to_user_id);
         // 获取和当前用户的聊天记录
         $.ajax({
-            url : "getMessageRecord",
+            url: "getMessageRecord",
+            // 设置超时时间
+            timeout: 3000,
+            async: false,
             type: "GET",
             data: {
-                to_user_id : to_user_id
+                to_user_id: to_user_id
             },
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 var dataHtmlRecord = "";
                 for (var i = 0; i < response.length; i++) {
@@ -138,14 +141,14 @@ $(function() {
                 var chat = document.getElementsByClassName("chat")[0];
                 chat.scrollTop = chat.scrollHeight;
             },
-            error:function () {
-
+            error: function () {
+                alert("连接服务器失败");
             }
         });
     }
 
     // 消息提示
-    var msgtips = function(msg) {
+    var msgtips = function (msg) {
         $(".alert-success").css("display", "block");
         $(".alert-success").html(msg);
         setTimeout(function () {
@@ -177,7 +180,7 @@ $(function() {
                 // 默认获取和第一个好友的聊天记录
                 getChatRecord(to_user_id_default);
             },
-            error: function() {
+            error: function () {
 
             }
         });
@@ -198,23 +201,23 @@ $(function() {
 
     // 延迟 1000ms 建立 websocket 连接
     var websocket;
-    setTimeout(function() {
+    setTimeout(function () {
         // 首先判断是否 支持 WebSocket
-        if('WebSocket' in window) {
+        if ('WebSocket' in window) {
             websocket = new WebSocket("ws://localhost:8080/ChatWithWebSocket/websocket");
-        } else if('MozWebSocket' in window) {
+        } else if ('MozWebSocket' in window) {
             websocket = new MozWebSocket("ws://localhost:8080/ChatWithWebSocket/websocket");
         } else {
             websocket = new SockJS("http://localhost:8080/ChatWithWebSocket/sockjs/websocket");
         }
 
         // 打开时
-        websocket.onopen = function(evnt) {
+        websocket.onopen = function (evnt) {
             console.log("  websocket.onopen  ");
         };
 
         // 处理消息时
-        websocket.onmessage = function(evnt) {
+        websocket.onmessage = function (evnt) {
             console.log("evet: " + evnt);
             console.log("收到了一条消息，消息内容是：" + evnt.data);
             var data = JSON.parse(evnt.data);
@@ -235,22 +238,31 @@ $(function() {
                             $(".user-list").prepend(dataHtml);
                             $(this).remove();
                         }
-                        // 获取和当前发来消息的用户的历史聊天记录
+                        /**
+                         * 获取和当前发来消息的用户的历史聊天记录
+                         * 这里需要注意的是，调用这个方法从后台获取聊天记录，
+                         * 可能由于网络原因（可以把这个异步的请求方式改为 同步 aysnc: false，true为异步，
+                         * 或者把后面执行的代码定时到 1s 之后执行，但是这样还是有问题
+                         *（如果从后台获取聊天记录超过 1 秒，那这个方法就失效了）这样就可以避免这个问题）在插入别的用户发来的消息之后执行，
+                         * 这样就可能会造成别的用户发来的消息被覆盖，
+                         */
                         getChatRecord(from_user_id);
                         // 这里的 return false 的作用相当于 break，即退出本次循环
                         //return false;
                     }
                 });
                 // 发消息的用户当前为选中状态
-                $(".message").eq(0).addClass("user-select");
-                //$("#msg").append("<p>(<font color='red'>" + evnt.data + "</font>)</p>");
-                $(".chat").append("<div class=\"sender\">" + "<div>"
-                    + "<img src=\"static/images/avatar.jpg\">"
-                    + "</div>" + "<div>" + "<div class=\"left_triangle\"></div>"
-                    + "<span>" + data.content + "</span>" + "</div>" + "</div>");
-                // 滑动滚动条到底部
-                var chat = document.getElementsByClassName("chat")[0];
-                chat.scrollTop = chat.scrollHeight;
+                //setTimeout(function () {
+                    $(".message").eq(0).addClass("user-select");
+                    //$("#msg").append("<p>(<font color='red'>" + evnt.data + "</font>)</p>");
+                    $(".chat").append("<div class=\"sender\">" + "<div>"
+                        + "<img src=\"static/images/avatar.jpg\">"
+                        + "</div>" + "<div>" + "<div class=\"left_triangle\"></div>"
+                        + "<span>" + data.content + "</span>" + "</div>" + "</div>");
+                    // 滑动滚动条到底部
+                    var chat = document.getElementsByClassName("chat")[0];
+                    chat.scrollTop = chat.scrollHeight;
+                //}, 1000);
             } else if (data.message_type == 1) {
                 // 如果收到的是验证消息
                 $("#system-message div ul").prepend("<li data-from-user-id=\"" +
@@ -262,29 +274,29 @@ $(function() {
         };
 
         // 连接出现错误时
-        websocket.onerror = function(evnt) {
+        websocket.onerror = function (evnt) {
             console.log("  websocket.onerror  ");
         };
 
         // 连接关闭时
-        websocket.onclose = function(evnt) {
+        websocket.onclose = function (evnt) {
             console.log("  websocket.onclose  ");
         };
     }, 1000);
 
     // 按回车键发送消息给好友
-    $(document).keydown(function(event) {
+    $(document).keydown(function (event) {
         if (event.keyCode == 13) {
             $("#sendMessage").click();
         }
     });
 
     // 点击发送按钮发送信息给好友
-    $("#sendMessage").click(function(){
+    $("#sendMessage").click(function () {
         // 获取消息内容
         var message_content = $("#content").val();
         // 判断
-        if(message_content == null || message_content.trim() == ""){
+        if (message_content == null || message_content.trim() == "") {
             //alert("message_content can not empty!!");
             var msg = "消息内容不能为空";
             msgtips(msg);
@@ -315,8 +327,8 @@ $(function() {
             url: "message",
             type: "POST",
             data: JSON.stringify({
-                from_user_id : from_user_id,
-                to_user_id : to_user_id,
+                from_user_id: from_user_id,
+                to_user_id: to_user_id,
                 content: message_content,
                 send_time: send_time,
                 message_type: 0
@@ -335,14 +347,14 @@ $(function() {
                 // 消息发送成功后清空输入框中的消息内容
                 $("#content").val("");
             },
-            error: function() {
+            error: function () {
 
             }
         });
     });
 
     // 退出登录
-    $("#loginOut").click(function() {
+    $("#loginOut").click(function () {
         //websocket.close
         // 关闭websocket连接
         if (!websocket.closed) {
@@ -352,7 +364,7 @@ $(function() {
             url: "loginOut",
             type: "GET",
             dataType: "json",
-            success:function(response) {
+            success: function (response) {
                 if (response.code == 0) {
                     location.href = "Login";
                 } else {
@@ -361,7 +373,7 @@ $(function() {
                     //return false;
                 }
             },
-            error: function() {
+            error: function () {
 
             }
         });
@@ -370,7 +382,7 @@ $(function() {
 
     // 点击获取好友的聊天记录
     $(".user-list").on("click", ".message", function () {
-        $(".user").each(function() {
+        $(".user").each(function () {
             if ($(this).hasClass("user-select")) {
                 $(this).removeClass("user-select");
             }
@@ -383,7 +395,7 @@ $(function() {
     });
 
     // 添加好友面板
-    $(".add-friend").click(function() {
+    $(".add-friend").click(function () {
         $(this).addClass("span-select");
         $(".system-message").removeClass("span-select");
         $("#system-message").css('display', 'none');
@@ -393,7 +405,7 @@ $(function() {
     });
 
     // 查找用户
-    $("#find-user").click(function() {
+    $("#find-user").click(function () {
         // 获取用户名
         var userName = $("#userName").val().trim();
 
@@ -407,7 +419,7 @@ $(function() {
     });
 
     // 验证消息面板
-    $(".system-message").click(function() {
+    $(".system-message").click(function () {
         $(this).addClass("span-select");
         $(".add-friend").removeClass("span-select");
         $("#system-message").css('display', 'block');
@@ -451,7 +463,7 @@ $(function() {
                 $("#system-message div ul").html(dataVerification);
             },
             error: function () {
-                
+
             }
         });
     });
@@ -511,7 +523,7 @@ $(function() {
         });
     });
 
-    $(".add-friend-pager li a").click(function() {
+    $(".add-friend-pager li a").click(function () {
         // 获取当前页号
         var current_page = parseInt($(this).parent().parent().attr("data-current-page"));
 
