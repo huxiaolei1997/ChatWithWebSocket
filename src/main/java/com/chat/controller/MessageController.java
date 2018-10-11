@@ -48,6 +48,7 @@ public class MessageController {
                 myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.toString()));
                 // 保存消息内容到数据库中
                 logger.info("用户在线，保存消息内容到数据库中，消息内容是" + message.toString());
+                // 消息记录可以考虑保存到 redis 中，暂时先放到 MySQL 中
                 messageService.saveChatRecord(message);
             } else {
                 // 保存消息内容到数据库中

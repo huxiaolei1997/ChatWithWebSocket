@@ -204,11 +204,11 @@ $(function () {
     setTimeout(function () {
         // 首先判断是否 支持 WebSocket
         if ('WebSocket' in window) {
-            websocket = new WebSocket("ws://localhost:8080/ChatWithWebSocket/websocket");
+            websocket = new WebSocket("ws://139.196.140.168:8899/ChatWithWebSocket/websocket");
         } else if ('MozWebSocket' in window) {
-            websocket = new MozWebSocket("ws://localhost:8080/ChatWithWebSocket/websocket");
+            websocket = new MozWebSocket("ws://139.196.140.168:8899/ChatWithWebSocket/websocket");
         } else {
-            websocket = new SockJS("http://localhost:8080/ChatWithWebSocket/sockjs/websocket");
+            websocket = new SockJS("http://139.196.140.168:8899/ChatWithWebSocket/sockjs/websocket");
         }
 
         // 打开时
@@ -239,7 +239,7 @@ $(function () {
                             $(this).remove();
                         }
                         /**
-                         * 获取和当前发来消息的用户的历史聊天记录
+                         * 获取和当前发来消息的用户的历史聊天记录（到目前为止，还是存在一定的问题，新的消息在服务端已经保存在了数据库中，这样会造成收到两条重复的新消息）
                          * 这里需要注意的是，调用这个方法从后台获取聊天记录，
                          * 可能由于网络原因（可以把这个异步的请求方式改为 同步 aysnc: false，true为异步，
                          * 或者把后面执行的代码定时到 1s 之后执行，但是这样还是有问题
