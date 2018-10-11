@@ -16,6 +16,8 @@ import org.springframework.web.socket.TextMessage;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 消息控制器
@@ -48,7 +50,14 @@ public class MessageController {
                 myWebSocketHandler.sendMessageToUser(message.getTo_user_id(), new TextMessage(message.toString()));
                 // 保存消息内容到数据库中
                 logger.info("用户在线，保存消息内容到数据库中，消息内容是" + message.toString());
-                messageService.saveChatRecord(message);
+                // 延迟 1s 保存到数据库中
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        messageService.saveChatRecord(message);
+                    }
+                }, 1000);
+                //messageService.saveChatRecord(message);
             } else {
                 // 保存消息内容到数据库中
                 logger.info("用户不在线，先保存消息内容到数据库中，消息内容是" + message.toString());
