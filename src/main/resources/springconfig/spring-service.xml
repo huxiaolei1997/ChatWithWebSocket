@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -9,26 +8,9 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-4.3.xsd
        http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
-        http://mybatis.org/schema/mybatis-spring
-        http://mybatis.org/schema/mybatis-spring.xsd">
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-
-
-    <mybatis:scan base-package="com.chat.mapper" />
-
-    <context:component-scan base-package="com.chat">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
-    </context:component-scan>
-
-    <context:property-override location="classpath:c3p0/c3p0.properties" />
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" />
-
-    <!-- 配置SqlSessionFactory -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
-    </bean>
+    <context:component-scan base-package="com.chat.serviceImpl" />
 
     <!-- JDBC事务管理器 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -37,4 +19,5 @@
 
     <!-- 启用支持annotation注解方式事务管理  -->
     <tx:annotation-driven transaction-manager="transactionManager" />
+
 </beans>

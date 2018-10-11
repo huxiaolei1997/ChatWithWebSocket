@@ -114,10 +114,13 @@ public class UserServiceImpl implements UserService {
             __current_page = 1;
         }
         // 计算行数起始位置
-        int start_page = page_size * (__current_page - 1) + 1;
+        //int start_page = page_size * (__current_page - 1) + 1;
+        int start_page = page_size * (__current_page - 1);
         // 行结束位置
-        int end_page = start_page + page_size - 1;
+        //int end_page = start_page + page_size - 1;
+
         // 获取总记录数
+        //int total_record = userMapper.countFindUserByUserName(user_id, userName, Constant.ACCESS);
         int total_record = userMapper.countFindUserByUserName(user_id, userName, Constant.ACCESS);
         // 计算总共页数
         int total_page = total_record / page_size + 1;
@@ -136,7 +139,8 @@ public class UserServiceImpl implements UserService {
             __current_page = total_page;
         }
 
-        List<User> userList = userMapper.findUserByUserName(start_page, end_page, user_id, userName, Constant.ACCESS);
+        List<User> userList = userMapper.findUserByUserName(start_page, page_size, user_id, userName, Constant.ACCESS);
+        //List<User> userList = userMapper.findUserByUserName();
         Pager<User> userPager = new Pager<>(__current_page, total_record, total_page, page_size, userList);
 
         return userPager;

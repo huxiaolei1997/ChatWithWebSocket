@@ -12,7 +12,7 @@
 <head>
     <meta charset="utf-8">
     <title>注册账号</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         .form-bg{
             background: #00b4ef;
@@ -177,8 +177,8 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="static/js/register.js"></script>
 </body>
 </html>

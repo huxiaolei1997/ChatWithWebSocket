@@ -13,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <title>当前在线用户是：${user.userName}</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/chat.css" rel="stylesheet" type="text/css">
 </head>
 <body style="background-color:white;">
@@ -79,8 +79,8 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/chat.js" type="text/javascript"></script>
 </body>
 </html>
